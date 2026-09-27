@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Name That Property · 31 problems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F6F5F2;
+  --surface: #FFFFFF;
+  --text: #1E1E1E;
+  --muted: #5F5F5F;
+  --line: #E2E0DA;
+  --wrong: #D1343B;
+  --wrong-soft: #FCE6E7;
+  --empty: #E2E0DA;
+  --ok: #2E9E5B; --ok-soft: #E1F4E8;
+  --c-comm: #E4572E; --c-comm-soft: #FDE8E1;
+  --c-assoc: #7B4FD6; --c-assoc-soft: #EFE8FC;
+  --c-iden: #B98200; --c-iden-soft: #FFF2CF;
+  --c-dist: #0E8F7E; --c-dist-soft: #DCF3EF;
+  --c-none: #6B6B6B; --c-none-soft: #ECEBE7;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1A1A1A; --surface: #252525; --text: #F2F2F2; --muted: #B3B3B3; --line: #3A3A3A;
+    --wrong: #FF6B70; --wrong-soft: #3D2224; --empty: #3A3A3A; --ok: #5FD68E; --ok-soft: #1C3527;
+    --c-comm: #FF8A65; --c-comm-soft: #3F2820;
+    --c-assoc: #B39DFF; --c-assoc-soft: #2F2847;
+    --c-iden: #FFCC4D; --c-iden-soft: #3B321A;
+    --c-dist: #4FD1BC; --c-dist-soft: #1B3632;
+    --c-none: #C4C4C4; --c-none-soft: #333333;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1A1A1A; --surface: #252525; --text: #F2F2F2; --muted: #B3B3B3; --line: #3A3A3A;
+  --wrong: #FF6B70; --wrong-soft: #3D2224; --empty: #3A3A3A; --ok: #5FD68E; --ok-soft: #1C3527;
+  --c-comm: #FF8A65; --c-comm-soft: #3F2820;
+  --c-assoc: #B39DFF; --c-assoc-soft: #2F2847;
+  --c-iden: #FFCC4D; --c-iden-soft: #3B321A;
+  --c-dist: #4FD1BC; --c-dist-soft: #1B3632;
+  --c-none: #C4C4C4; --c-none-soft: #333333;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+main { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 3vw, 2.5rem) 3rem; }
+
+[data-p="Commutative"]  { --c: var(--c-comm);  --c-soft: var(--c-comm-soft); }
+[data-p="Associative"]  { --c: var(--c-assoc); --c-soft: var(--c-assoc-soft); }
+[data-p="Identity"]     { --c: var(--c-iden);  --c-soft: var(--c-iden-soft); }
+[data-p="Distributive"] { --c: var(--c-dist);  --c-soft: var(--c-dist-soft); }
+[data-p="Not true"]     { --c: var(--c-none);  --c-soft: var(--c-none-soft); }
+
+header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+h1 { font-size: 1.6rem; font-weight: 700; margin: 0; letter-spacing: -0.02em; }
+.count { color: var(--muted); font-size: 1rem; }
+.count strong { color: var(--text); font-weight: 600; }
+
+.dots { display: flex; gap: 6px; margin-bottom: 1.25rem; }
+.dots span { flex: 1; height: 8px; border-radius: 4px; background: var(--empty); }
+.dots span.now { background: var(--muted); }
+.dots span.ok { background: var(--ok); }
+.dots span.no { background: var(--wrong); }
+
+.question {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 2.5rem 1.5rem 2.25rem;
+  text-align: center;
+}
+.prompt { color: var(--muted); font-size: 1rem; margin: 0 0 1.25rem; }
+.eq-wrap { overflow-x: auto; padding: 0.25rem 0; }
+.eq {
+  font-size: clamp(1.35rem, 5vw, 2.3rem);
+  font-weight: 600;
+  line-height: 1.5;
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  column-gap: 0.4em; row-gap: 0.2em;
+  font-variant-numeric: lining-nums;
+}
+.eq .side { white-space: nowrap; display: inline-block; }
+.eq .eqs { color: var(--muted); font-weight: 400; }
+.hl { border-radius: 6px; padding: 0 .12em; transition: background-color .25s, color .25s; }
+.eq.revealed .hl { background: var(--c-soft); color: var(--c); }
+.frac { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; font-size: 0.72em; line-height: 1.1; margin: 0 .08em; }
+.frac > span:first-child { border-bottom: 2px solid currentColor; padding: 0 .2em .05em; }
+.frac > span:last-child { padding: .05em .2em 0; }
+sup { font-size: 0.6em; line-height: 0; }
+
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem; }
+.choice {
+  font: inherit; font-weight: 500; color: var(--text);
+  background: var(--surface);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  text-align: left; cursor: pointer;
+  display: flex; align-items: center; gap: 0.8rem;
+  min-height: 3.75rem;
+  transition: border-color .15s, background-color .15s;
+}
+.choice .sw { width: 14px; height: 14px; border-radius: 50%; background: var(--c); flex: none; }
+.choice .label { flex: 1; }
+.choice .key { color: var(--muted); font-size: 0.85rem; font-weight: 400; }
+.choice:hover:not(:disabled) { border-color: var(--c); }
+.choice:focus-visible, .btn:focus-visible, summary:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+.choice:disabled { cursor: default; }
+.choice.right { background: var(--c-soft); border-color: var(--c); }
+.choice.right .key::before { content: "✓ "; color: var(--c); font-weight: 700; }
+.choice.wrong { background: var(--wrong-soft); border-color: var(--wrong); }
+.choice.wrong .key::before { content: "✕ "; color: var(--wrong); font-weight: 700; }
+.choice.dim { opacity: 0.4; }
+
+.feedback { display: none; margin-top: 1rem; background: var(--surface); border-radius: 20px; padding: 1.5rem; border-top: 6px solid var(--c); }
+.feedback.show { display: block; }
+.verdict { font-size: 1.3rem; font-weight: 700; margin: 0 0 0.35rem; }
+.verdict.ok { color: var(--c); }
+.verdict.no { color: var(--wrong); }
+.tell { margin: 0 0 1.25rem; max-width: 60ch; }
+.steps-title { font-size: 1rem; font-weight: 600; color: var(--muted); margin: 0 0 0.5rem; }
+.steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.4rem; }
+.steps li {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 0.55rem 0.9rem;
+  font-size: 1.15rem; font-weight: 500;
+  overflow-x: auto;
+}
+.steps li { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.steps li.ok { background: var(--ok-soft); }
+.steps li.gave { background: var(--wrong-soft); }
+.steps li .mark { font-weight: 700; margin-left: auto; }
+.steps li.ok .mark { color: var(--ok); }
+.steps li.gave .mark { color: var(--wrong); }
+.blank {
+  font: inherit; color: var(--text); text-align: center;
+  width: 4.5em; padding: .15em .3em;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 8px;
+}
+.frac .blank { width: 3em; font-size: 1em; }
+.blank:focus { outline: none; border-color: var(--text); }
+.blank.bad { border-color: var(--wrong); }
+.blank:disabled { border-color: transparent; background: transparent; color: inherit; font-weight: 700; opacity: 1; -webkit-text-fill-color: currentColor; }
+.check { font: inherit; font-size: .95rem; font-weight: 600; background: var(--text); color: var(--surface); border: 0; border-radius: 8px; padding: .35rem .8rem; cursor: pointer; }
+.check:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+.opts { display: flex; gap: .4rem; flex-wrap: wrap; }
+.opt { font: inherit; font-size: 1.05rem; font-weight: 600; color: var(--text); background: var(--surface); border: 2px solid var(--line); border-radius: 8px; padding: .2rem .8rem; cursor: pointer; min-width: 3rem; }
+.opt .frac { font-size: .8em; }
+.opt:hover:not(:disabled) { border-color: var(--text); }
+.opt:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+.opt:disabled { cursor: default; }
+.opt.right { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.opt.wrong { background: var(--wrong-soft); border-color: var(--wrong); color: var(--wrong); }
+.opt.dim { opacity: .4; }
+
+.btn {
+  font: inherit; font-weight: 600;
+  background: var(--text); color: var(--surface);
+  border: 0; border-radius: 12px;
+  padding: 0.8rem 1.6rem; cursor: pointer; margin-top: 1.25rem;
+}
+.hint { color: var(--muted); font-size: 0.9rem; text-align: center; margin-top: 1.25rem; }
+
+.summary { display: none; background: var(--surface); border-radius: 20px; padding: 2rem 1.5rem; }
+.summary.show { display: block; }
+.big { font-size: 3.5rem; font-weight: 700; line-height: 1; margin: 0 0 0.5rem; letter-spacing: -0.03em; }
+.bars { margin: 1.75rem 0 0.5rem; display: grid; gap: 0.9rem; }
+.bar-row { display: grid; grid-template-columns: 8.5rem 1fr 2.75rem; align-items: center; gap: 0.75rem; }
+.bar { height: 14px; background: var(--bg); border-radius: 7px; overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--c); border-radius: 7px; }
+.bar-row .n { text-align: right; color: var(--muted); }
+
+.guide { margin-top: 2rem; }
+.guide summary { cursor: pointer; font-weight: 600; font-size: 1.05rem; padding: 0.5rem 0; }
+.guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem; }
+.gcard { background: var(--surface); border-radius: 14px; padding: 1rem 1.1rem; border-left: 5px solid var(--c); }
+.gcard h3 { margin: 0 0 0.25rem; font-size: 1.05rem; color: var(--c); }
+.gcard p { margin: 0; font-size: 0.98rem; color: var(--muted); }
+.gcard .ex { display: block; margin-top: 0.4rem; color: var(--text); font-weight: 500; }
+
+.result { display: none; margin: 1rem 0 0; font-size: clamp(1.6rem, 6vw, 2.5rem); font-weight: 700; color: var(--c); }
+.result.show { display: block; }
+.eq .res { color: var(--c); font-weight: 700; }
+.eq .res .eqs { color: var(--c); font-weight: 700; }
+.sides { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.sidebtn { --c: var(--ok); --c-soft: var(--ok-soft); background: var(--bg); justify-content: center; text-align: center; font-size: 1.2rem; font-weight: 600; }
+.sidebtn:hover:not(:disabled) { border-color: var(--text); }
+.sidebtn .key { position: absolute; }
+.sidebtn { position: relative; }
+.sidebtn .key { top: .45rem; right: .7rem; }
+.sidebtn .frac { font-size: 0.8em; }
+#sideQ, #reveal { display: none; }
+#sideQ.show, #reveal.show { display: block; }
+#sideQ { margin-bottom: 1.25rem; }
+.sidenote { font-weight: 600; margin: 0.75rem 0 0; }
+.sidenote.ok { color: var(--ok); } .sidenote.no { color: var(--wrong); }
+@media (min-width: 900px) {
+  .choices, .guide-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .choice { padding: 0.9rem 0.75rem; gap: 0.55rem; }
+  .question { padding: 3rem 2rem 2.75rem; }
+}
+@media (min-width: 541px) and (max-width: 899px) {
+  .choices .choice:last-child:nth-child(odd), .guide-grid .gcard:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
+@media (max-width: 540px) {
+  .sides { grid-template-columns: 1fr; }
+  .choices, .guide-grid { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 7rem 1fr 2.5rem; }
+  .question { padding: 2rem 1rem; }
+}
+
+/* stacked "giant 1" layout for common denominators */
+.stack { display: inline-grid; grid-template-columns: repeat(6, auto); align-items: center; column-gap: .35em; row-gap: .15em; font-size: clamp(1.35rem, 5vw, 2.3rem); font-weight: 600; }
+.stack .op { min-width: .6em; text-align: center; }
+.stack .eqs { color: var(--muted); font-weight: 400; }
+.one { vertical-align: middle; margin: .3em 0; position: relative; display: inline-flex; align-items: center; justify-content: center; width: 2.7em; height: 3.5em; transition: color .25s; }
+.one svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.one .frac { position: relative; transform: translateX(.1em); }
+.one svg { top: -.3em; height: 100%; } /* move the outline up, keep the fraction level */
+.eq.revealed .one { color: var(--c); }
+.one.wide { width: 5.4em; height: 4.4em; }
+.one.wide .frac { transform: translateX(.18em); }
+
+/* equation solved on paper, like the notebook */
+.solve { display: inline-grid; grid-template-columns: repeat(5, auto); column-gap: .45em; row-gap: .1em; align-items: center; justify-items: center; font-size: clamp(1.35rem, 5vw, 2.3rem); font-weight: 600; }
+.solve .eqs { color: var(--muted); font-weight: 400; justify-self: center; }
+.solve .sub { color: var(--muted); }
+.solve .rule { grid-column: 1 / -1; justify-self: stretch; border-top: 3px solid currentColor; margin: .15em 0 .2em; }
+.solve.div { grid-template-columns: repeat(3, auto); row-gap: .35em; }
+.solve.div .frac { font-size: .9em; }
+.story { flex-basis: 100%; }
+.story p { font-size: 1.1rem; font-weight: 400; line-height: 1.5; max-width: 34em; margin: 0 auto .6em; text-wrap: pretty; }
+.storyeq { white-space: nowrap; }
+.solve .dim { opacity: .35; }
+.slot { color: var(--muted); display: inline-block; min-width: .8em; text-align: center; }
+.slot.filled { color: var(--c); }
+
+/* compact: everything fits on one screen */
+
+main { max-width: 820px; padding: .85rem clamp(.9rem, 3vw, 1.5rem) 1rem; }
+header { margin-bottom: .55rem; flex-wrap: nowrap; }
+h1 { font-size: 1.15rem; white-space: nowrap; }
+.hright { display: flex; align-items: center; gap: .75rem; }
+.count { font-size: .9rem; white-space: nowrap; }
+.helpbtn { font: inherit; font-size: .9rem; font-weight: 600; color: var(--text); background: var(--surface); border: 2px solid var(--line); border-radius: 999px; padding: .3rem .85rem; cursor: pointer; min-height: 40px; }
+.helpbtn.round { width: 40px; height: 40px; padding: 0; font-size: 1.05rem; flex: none; }
+.helpbtn:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+.dots { margin-bottom: .7rem; }
+.dots span { height: 6px; }
+.question { padding: 1rem 1rem 1.15rem; border-radius: 16px; }
+.prompt { font-size: .9rem; margin: 0 0 .45rem; }
+.eq, .stack, .solve { font-size: clamp(1.2rem, min(4.6vw, 4.4vh), 2.1rem); }
+@media (max-height: 680px) {
+  main { padding-top: .5rem; padding-bottom: .5rem; }
+  header { margin-bottom: .35rem; }
+  .dots { margin-bottom: .45rem; }
+  .question { padding: .65rem .8rem .75rem; }
+  .prompt { margin-bottom: .2rem; }
+  .choices { margin-top: .5rem; }
+  .feedback { margin-top: .5rem; padding: .6rem .9rem .75rem; }
+  .fb-head { min-height: 40px; }
+  .tell { margin-bottom: .35rem; line-height: 1.35; }
+  #solveTitle { margin-top: .35rem; }
+  .steps { gap: .3rem; }
+  .steps li { padding: .15rem .6rem; }
+  .eq, .solve, .stack { line-height: 1.3; }
+  .solve { row-gap: 0; }
+  .one { height: 3.1em; }
+}
+.story p { font-size: 1rem; line-height: 1.45; margin-bottom: .45em; }
+.choices { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: .7rem; }
+.choice { flex: 0 1 auto; min-height: 44px; padding: .4rem 1rem; border-radius: 999px; font-size: 1rem; gap: .5rem; }
+.choice .label { flex: none; }
+.choice .key:empty { display: none; }
+.choices.answered { display: none; }
+.feedback { margin-top: .7rem; padding: .85rem 1rem 1rem; border-radius: 16px; border-top-width: 5px; }
+.fb-head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .2rem; min-height: 44px; }
+.verdict { font-size: 1.1rem; margin: 0; line-height: 1.3; }
+.tell { margin: 0 0 .6rem; font-size: 1rem; line-height: 1.45; }
+.btn { margin-top: 0; padding: .55rem 1.4rem; flex: none; }
+.steps-title { font-size: .9rem; margin: 0 0 .35rem; }
+#solveTitle { margin-top: .55rem; }
+.steps li { padding: .3rem .7rem; font-size: 1.05rem; }
+#sideQ { margin-bottom: .5rem; }
+.sides { grid-template-columns: 1fr 1fr; gap: .5rem; }
+.sidebtn { font-size: 1.05rem; min-height: 44px; padding: .45rem .6rem; border-radius: 12px; }
+.sidenote { margin: 0 0 .1rem; font-size: 1rem; line-height: 1.4; }
+dialog.guide { border: 0; border-radius: 18px; padding: 1rem; background: var(--surface); color: var(--text); width: min(620px, 92vw); max-height: 88dvh; overflow: auto; margin: auto; }
+dialog.guide::backdrop { background: rgba(0, 0, 0, .5); }
+.guide-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: .6rem; }
+.guide-head h2 { font-size: 1.15rem; margin: 0; }
+dialog.guide .guide-grid { grid-template-columns: 1fr 1fr; margin: 0; }
+dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
+@media (max-width: 380px) { h1 { font-size: .9rem !important; } .count { font-size: .72rem !important; } .hright { gap: .4rem !important; } header { gap: .5rem; } }
+@media (max-width: 540px) { dialog.guide .guide-grid { grid-template-columns: 1fr; } h1 { font-size: 1rem; } .count { font-size: .8rem; } .hright { gap: .5rem; } .helpbtn:not(.round) { padding: .25rem .7rem; } }
+@media (prefers-reduced-motion: reduce) { .hl, .choice { transition: none; } }
+
+/* ---------- 31-problem set + turn in ---------- */
+.dots { gap: 3px; }
+.dots span { border-radius: 3px; }
+.dots.extra { gap: 6px; }
+.turnbtn { color: var(--text); }
+.off { display: none !important; }
+.turnin { position: fixed; inset: 0; z-index: 100; overflow: auto; background: var(--bg);
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.ti-inner { max-width: 640px; margin: clamp(12px, 4vh, 40px) auto; padding: 1.6rem clamp(1rem, 4vw, 2.2rem) 2rem;
+  background: var(--surface); border-radius: 20px; }
+.ti-inner h2 { font-size: 1.5rem; margin: 0 0 .3rem; letter-spacing: -0.02em; }
+.ti-inner h3 { font-size: 1.05rem; margin: 1.6rem 0 .6rem; }
+.ti-sub { color: var(--muted); margin: 0 0 1.2rem; font-size: 1rem; line-height: 1.5; }
+.ti-warn { background: var(--c-iden-soft); color: var(--text); border-left: 5px solid var(--c-iden); border-radius: 10px;
+  padding: .7rem .9rem; margin-bottom: 1.1rem; font-size: .92rem; line-height: 1.5; }
+.ti-field { margin-bottom: .9rem; }
+.ti-field label { display: block; margin-bottom: .35rem; font-size: 1rem; font-weight: 600; }
+.ti-field label em { font-style: normal; color: var(--muted); font-weight: 400; font-size: .88rem; }
+.ti-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; margin-right: .5rem;
+  border-radius: 50%; background: var(--text); color: var(--surface); font-size: .78rem; }
+.ti-field input { font: inherit; font-size: 1.05rem; font-weight: 600; color: var(--text); width: 100%;
+  border: 2px solid var(--line); border-radius: 10px; padding: .55rem .75rem; background: var(--surface); }
+.ti-field input:focus { outline: none; border-color: var(--text); }
+.ti-check { border: 2px solid var(--line); border-radius: 12px; padding: .7rem .9rem; margin: .25rem 0 1rem; background: var(--bg); font-size: .95rem; }
+.ti-check .head { color: var(--muted); font-size: .88rem; margin-bottom: .4rem; }
+.ti-check .row { display: flex; gap: .75rem; align-items: baseline; }
+.ti-check .row:last-child { margin-top: .3rem; padding-top: .35rem; border-top: 2px solid var(--line); }
+.ti-check .t { color: var(--muted); min-width: 6rem; font-size: .85rem; }
+.ti-check .v { font-weight: 600; }
+.ti-check .v.empty { color: var(--line); }
+.ti-inner .btn { margin-top: 0; }
+.ti-feedback { margin-top: .9rem; min-height: 1.2em; font-size: 1rem; }
+.ti-feedback .ok { color: var(--ok); font-weight: 600; }
+.ti-feedback .note { color: var(--muted); }
+.ti-after { margin-top: 1.2rem; padding-top: 1rem; border-top: 2px solid var(--line); display: flex; gap: .75rem;
+  align-items: center; flex-wrap: wrap; color: var(--muted); font-size: 1rem; }
+.ti-recap { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; }
+.ti-recap > div { border: 2px solid var(--line); border-radius: 12px; padding: .5rem .8rem; color: var(--muted); font-size: .85rem; }
+.ti-recap b { display: block; color: var(--text); font-size: 1.5rem; }
+.ti-inner .bars { margin: 1rem 0 0; gap: .6rem; font-size: .95rem; }
+.ti-log { max-height: 340px; overflow: auto; margin-top: 1rem; padding: .3rem 0; border-top: 2px solid var(--line); border-bottom: 2px solid var(--line); }
+.ti-empty { color: var(--muted); margin-top: .8rem; font-size: 1rem; }
+.ti-row { display: flex; gap: .6rem; align-items: baseline; padding: .3rem .1rem; font-size: .95rem; flex-wrap: wrap; }
+.ti-n { color: var(--muted); min-width: 1.8rem; text-align: right; font-size: .82rem; }
+.ti-q { flex: 1 1 14rem; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+.ti-k { font-size: .85rem; white-space: nowrap; color: var(--ok); font-weight: 600; }
+.ti-k.no { color: var(--wrong); }
+@media (max-width: 540px) { #streakBox { display: none; } .ti-recap { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1 id="title">Problem 1 of 31</h1>
+    <div class="hright">
+      <div class="count" aria-live="polite">Score <strong id="score">0/0</strong><span id="streakBox"> &nbsp; Streak <strong id="streak">0</strong></span></div>
+      <button class="helpbtn turnbtn" id="turninBtn" type="button">Turn in</button>
+      <button class="helpbtn round" id="helpBtn" type="button" aria-label="Help" title="Help">?</button>
+    </div>
+  </header>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+
+  <section id="drill">
+    <div class="question">
+      <p class="prompt">Which property? Or is it not true?</p>
+      <div class="eq-wrap"><div class="eq" id="eq"></div></div>
+      <p class="result" id="result"></p>
+    </div>
+
+    <div class="choices" id="choices"></div>
+
+    <div class="feedback" id="feedback" aria-live="polite">
+      <div class="fb-head"><p class="verdict" id="verdict"></p><button class="btn" id="next" hidden>Next</button></div>
+      <p class="tell" id="tell"></p>
+      <div id="sideQ">
+        <p class="steps-title">Easier in your head?</p>
+        <div class="sides" id="sides"></div>
+      </div>
+      <div id="reveal">
+        <p class="sidenote" id="sidenote" hidden></p>
+        <p class="steps-title" id="solveTitle">Solve it</p>
+        <ol class="steps" id="steps"></ol>
+      </div>
+    </div>
+  </section>
+
+
+
+  <dialog class="guide" id="guide" aria-labelledby="guideTitle">
+    <div class="guide-head"><h2 id="guideTitle">Help</h2><button class="helpbtn" id="guideClose" type="button">Close</button></div>
+    <div class="guide-grid">
+      <div class="gcard" data-p="Commutative"><h3>Commutative</h3><p>Order changes<span class="ex">4 + 9 = 9 + 4</span></p></div>
+      <div class="gcard" data-p="Associative"><h3>Associative</h3><p>Parentheses move<span class="ex">(2 + 8) + 5 = 2 + (8 + 5)</span></p></div>
+      <div class="gcard" data-p="Identity"><h3>Identity</h3><p>+ 0 or × 1, even 1 in disguise like 3/3<span class="ex">7 × 1 = 7 &nbsp; 7 + 0 = 7</span></p></div>
+      <div class="gcard" data-p="Distributive"><h3>Distributive</h3><p>Multiply each part<span class="ex">3 × (10 + 2) = 30 + 6</span></p></div>
+      <div class="gcard" data-p="Not true"><h3>Not true</h3><p>Swapping doesn't work for − or ÷<span class="ex">10 − 3 ≠ 3 − 10</span></p></div>
+    </div>
+  </dialog>
+</main>
+
+<!-- the turn-in page: after problem 31, or any time from the Turn in button -->
+<div class="turnin off" id="turnin" role="dialog" aria-labelledby="ti-title">
+  <div class="ti-inner">
+    <h2 id="ti-title">All 31 done</h2>
+    <p class="ti-sub" id="ti-sub">Enter your period and name to turn in your work.</p>
+
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none"
+            onload="if(window.onHiddenFrameLoad)onHiddenFrameLoad()"></iframe>
+
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSe4_Gnrq1zyrttA3lSgrVBtMkaVaoMim31ByzoH-orxmfDB2A/formResponse"
+          method="POST" target="hidden_iframe" id="gform">
+      <div class="ti-warn">
+        Read the box labels before you type. Your <b>LAST name</b> goes in the
+        <b>Last name</b> box and your <b>FIRST name</b> goes in the <b>First name</b> box.
+        Swapped names cannot be matched to the roster and count as missing.
+      </div>
+      <div class="ti-field">
+        <label for="studentPeriod"><span class="ti-num">1</span>Period</label>
+        <input type="number" id="studentPeriod" placeholder="e.g. 3" min="1" max="10" required>
+      </div>
+      <div class="ti-field">
+        <label for="lastName"><span class="ti-num">2</span>LAST name
+          <em>&mdash; your family name, the one the roster is alphabetized by</em></label>
+        <input type="text" id="lastName" placeholder="Rodriguez" autocomplete="family-name" required>
+      </div>
+      <div class="ti-field">
+        <label for="firstName"><span class="ti-num">3</span>FIRST name
+          <em>&mdash; the name your teacher calls you by</em></label>
+        <input type="text" id="firstName" placeholder="Maria" autocomplete="given-name" required>
+      </div>
+      <div class="ti-check" id="nameCheck"></div>
+      <input type="hidden" id="studentName" name="entry.1899284808" value="">
+      <input type="hidden" id="formScore" name="entry.1974610095" value="">
+      <button type="submit" class="btn" id="ti-submit">Submit Results</button>
+    </form>
+
+    <div class="ti-feedback" id="ti-feedback"></div>
+    <div class="ti-after">
+      <span id="ti-after-lab">Want more practice?</span>
+      <button class="helpbtn" type="button" id="ti-back">Keep practicing</button>
+    </div>
+
+    <!-- the work goes under the form, so the name boxes are the first thing on the page -->
+    <h3>Your work</h3>
+    <div class="ti-recap" id="ti-recap"></div>
+    <div class="bars" id="ti-bars"></div>
+    <div id="ti-log"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const f = (a, b) => `<span class="frac"><span>${a}</span><span>${b}</span></span>`;
+  const h = (s) => `<span class="hl">${s}</span>`;
+  // wide version of the giant 1 for fractions with units, like 12 in / 1 ft
+  const oneWide = (fr) => `<span class="one wide"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M32 3 H86 V82 H96 V97 H10 V82 H20 V36 L3 42 Q14 15 32 3 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>${fr}</span>`;
+  const one = (fr) => `<span class="one"><svg viewBox="0 0 60 100" preserveAspectRatio="none" aria-hidden="true"><path d="M23 4 H47 V79 H57 V96 H7 V79 H17 V34 L3 40 Q11 15 23 4 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>${fr}</span>`;
+  const R = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const fmt = (n) => Number(n.toFixed(2)).toLocaleString("en-US", { maximumFractionDigits: 2 });
+  const plain = (n) => String(Number(n.toFixed(2)));
+  const notTen = (a, b) => { let n; do { n = R(a, b); } while (n % 10 === 0); return n; };
+  const PAIRS = [[25, 4], [5, 2], [50, 2], [20, 5], [125, 8], [25, 8], [25, 2], [4, 5], [50, 4], [2, 10], [5, 4]]
+    .flatMap(([x, y]) => [[x, y], [y, x]]);
+  const FRAC = [[2, 2], [2, 4], [2, 6], [2, 8], [4, 4], [4, 8], [4, 12]]; // 1/d × y is a whole number
+  const DEC = [[0.5, 2], [0.25, 4], [0.5, 8], [0.2, 5], [0.25, 8], [0.5, 6], [0.2, 10], [0.25, 12]]
+    .flatMap(([x, y]) => [[x, y], [y, x]]);
+  // word problem solved with the distributive property: a(23) = a(20) + a(3)
+  const story = (templates) => {
+    const a = R(3, 9);
+    let n; do { n = notTen(21, 89); } while (n % 25 === 0); // skip 25 and 75: quarters are too easy
+    const tn = n - n % 10, u = n % 10, t = a * n;
+    const [text, unit] = pick(templates)(a, n);
+    const money = unit === "$";
+    return { custom: `<div class="story"><p>${text}</p><div class="storyeq">${a}(${n}) <span class="eqs">=</span> ${h(`${a}(${tn})`)} + ${h(`${a}(${u})`)}</div></div>`,
+      tell: `Split ${n} into ${tn} + ${u}, then multiply each part by ${a}.`,
+      steps: [[`${a} × ${tn}`, plain(a * tn)], [`${a} × ${u}`, plain(a * u)],
+        [money ? `${a * tn} + ${a * u} = $` + "{_}" : `${a * tn} + ${a * u} = {_} ${unit}`, plain(t)]],
+      side: false };
+  };
+  // a friendly round total that isn't always 100
+  // a × (…) or a(…): both ways of writing it
+  const par = (a, inner) => Math.random() < 0.5 ? `${a}(${inner})` : `${a} × (${inner})`;
+  // a number that makes the ungrouped product awkward (m × b isn't a round number)
+  const PAIRS_A = PAIRS.filter(([x]) => x % 10 !== 0); // first number can make an awkward product
+  const awkward = (m, lo, hi) => { let b; do { b = notTen(lo, hi); } while ((m * b) % 10 === 0 || b % 25 === 0); return b; };
+  // pick b so only a + c makes a round number: b + a and b + c don't, and b + a needs carrying
+  const clearB = (a, c, lo, hi) => { let b, k = 0; do { b = notTen(lo, hi); k++; } while (k < 500 && ((b + a) % 10 === 0 || (b + c) % 10 === 0 || b % 10 + a % 10 < 10)); return b; };
+  const roundT = () => pick([20, 30, 40, 50, 60, 70, 80, 90, 100, 200]);
+  const splitT = (T) => { let a; do { a = T >= 100 ? R(11, T - 11) : R(3, T - 3); } while (a % 10 === 0 || a % 10 === 1 || a * 2 === T); return a; };
+
+  // Each generator returns { l, r (easier side), tell, steps: [[prompt, answer...]], ans }
+  const GEN = {
+    Commutative: [
+      () => {
+        const T = roundT(), a = splitT(T), c = T - a, b = clearB(a, c, 12, 98), t = T + b;
+        return { l: `${a} + ${b} + ${h(c)}`, r: `${a} + ${h(c)} + ${b}`, tell: `${c} moved next to ${a}.`,
+          steps: [[`${a} + ${c}`, plain(T)], [`${T} + ${b}`, plain(t)]], ans: fmt(t) };
+      },
+      () => {
+        const [x, y] = pick(PAIRS_A), b = awkward(x, 11, 99), P = x * y, t = P * b;
+        return { l: `${x} × ${b} × ${h(y)}`, r: `${x} × ${h(y)} × ${b}`, tell: `${y} moved next to ${x}.`,
+          steps: [[`${x} × ${y}`, plain(P)], [`${fmt(P)} × ${b}`, plain(t)]], ans: fmt(t) };
+      },
+      () => {
+        const a = R(2, 9), c = 10 - a, b = clearB(a, c, 11, 99), t = 10 + b;
+        return { l: `${a} + ${b} + ${h(c)}`, r: `${a} + ${h(c)} + ${b}`, tell: `${c} moved next to ${a}.`,
+          steps: [[`${a} + ${c}`, "10"], [`10 + ${b}`, plain(t)]], ans: fmt(t) };
+      },
+      () => { // two-digit + one-digit make a round number: 47 + 36 + 3
+        const T = pick([20, 30, 40, 50, 60, 70, 80, 90]), c = R(1, 8), a = T - c, b = clearB(a, c, 21, 89), t = T + b;
+        return { l: `${a} + ${b} + ${h(c)}`, r: `${a} + ${h(c)} + ${b}`, tell: `${c} moved next to ${a}.`,
+          steps: [[`${a} + ${c}`, plain(T)], [`${T} + ${b}`, plain(t)]], ans: fmt(t) };
+      },
+      () => { // fractions that make a whole number: ½ × 27 × 6
+        const [d, y] = pick(FRAC), fr = f(1, d);
+        let b; do { b = notTen(11, 49); } while (b % d === 0); // ½ × b shouldn't come out even
+        const P = y / d, t = P * b;
+        return { l: `${fr} × ${b} × ${h(y)}`, r: `${fr} × ${h(y)} × ${b}`, tell: `${y} moved next to 1/${d}.`,
+          steps: [[`${fr} × ${y}`, plain(P)], [`${P} × ${b}`, plain(t)]], ans: fmt(t) };
+      },
+      () => { // multiplication written with parentheses: 4(17)(25) = 4(25)(17)
+        const [x, y] = pick(PAIRS_A), b = awkward(x, 11, 49), P = x * y, t = P * b;
+        return { l: `${x}(${b})(${h(y)})`, r: `${x}(${h(y)})(${b})`, tell: `${y} moved next to ${x}.`,
+          steps: [[`${x}(${y})`, plain(P)], [`${P}(${b})`, plain(t)]], ans: fmt(t) };
+      }
+    ],
+    Associative: [
+      () => {
+        const T = roundT(), a = splitT(T), c = T - a, b = clearB(a, c, 11, 99), t = b + T;
+        return { l: `(${b} + ${a}) + ${c}`, r: `${b} + ${h(`(${a} + ${c})`)}`, tell: "Same order, parentheses moved.",
+          steps: [[`${a} + ${c}`, plain(T)], [`${b} + ${T}`, plain(t)]], ans: fmt(t) };
+      },
+      () => {
+        const [x, y] = pick(PAIRS_A), b = awkward(x, 11, 99), P = x * y, t = b * P;
+        return { l: `(${b} × ${x}) × ${y}`, r: `${b} × ${h(`(${x} × ${y})`)}`, tell: "Same order, parentheses moved.",
+          steps: [[`${x} × ${y}`, plain(P)], [`${b} × ${fmt(P)}`, plain(t)]], ans: fmt(t) };
+      },
+      () => {
+        const a = R(1, 8) + 0.5, c = 10 - a, b = R(11, 99) / 10, t = b + 10;
+        if (b % 1 === 0) return GEN.Associative[0]();
+        return { l: `(${plain(b)} + ${plain(a)}) + ${plain(c)}`, r: `${plain(b)} + ${h(`(${plain(a)} + ${plain(c)})`)}`, tell: "Same order, parentheses moved.",
+          steps: [[`${plain(a)} + ${plain(c)}`, "10"], [`${plain(b)} + 10`, plain(t)]], ans: fmt(t) };
+      },
+      () => { // almost-round: (146 + 299) + 1 = 146 + (299 + 1)
+        const T = pick([100, 200, 300, 400, 500, 1000]), c = R(1, 3), a = T - c;
+        let b; do { b = R(101, 899); } while (b % 10 === 0);
+        const t = b + T;
+        return { l: `(${b} + ${a}) + ${c}`, r: `${b} + ${h(`(${a} + ${c})`)}`, tell: "Same order, parentheses moved.",
+          steps: [[`${a} + ${c}`, plain(T)], [`${b} + ${T}`, plain(t)]], ans: fmt(t) };
+      },
+      () => { // fractions: (18 × ½) × 8 = 18 × (½ × 8)
+        const [d, y] = pick(FRAC);
+        let b; do { b = notTen(11, 49); } while (b % d === 0); // b × 1/d shouldn't come out even
+        const P = y / d, t = b * P, fr = f(1, d);
+        return { l: `(${b} × ${fr}) × ${y}`, r: `${b} × ${h(`(${fr} × ${y})`)}`, tell: "Same order, parentheses moved.",
+          steps: [[`${fr} × ${y}`, plain(P)], [`${b} × ${P}`, plain(t)]], ans: fmt(t) };
+      },
+      () => { // 5(2 × 37) = (5 × 2) × 37
+        const [a, c] = pick([[5, 2], [2, 5], [25, 4], [4, 25], [50, 2], [20, 5]]), n = awkward(c, 11, 49), P = a * c, t = P * n;
+        return { l: `${a}(${c} × ${n})`, r: `${h(`(${a} × ${c})`)} × ${n}`, tell: "Same order, parentheses moved.",
+          steps: [[`${a} × ${c}`, plain(P)], [`${P} × ${n}`, plain(t)]], ans: fmt(t) };
+      }
+    ],
+    Distributive: [
+      () => { // a × (round − k)
+        const B = pick([20, 30, 40, 50, 60, 100, 200]), a = R(3, 9), k = R(1, 3), t = a * B - a * k;
+        return { l: par(a, `${B} − ${k}`), r: `${h(`${a} × ${B}`)} − ${h(`${a} × ${k}`)}`, tell: `${a} times each part.`,
+          steps: [[`${a} × ${B}`, plain(a * B)], [`${a} × ${k}`, plain(a * k)], [`${a * B} − ${a * k}`, plain(t)]], ans: fmt(t) };
+      },
+      () => { // a × (tens + ones)
+        const a = R(3, 9);
+        let tn, u; do { tn = R(2, 9) * 10; u = R(1, 9); } while ((tn + u) % 25 === 0);
+        const t = a * (tn + u);
+        return { l: par(a, `${tn} + ${u}`), r: `${h(`${a} × ${tn}`)} + ${h(`${a} × ${u}`)}`, tell: `${a} times each part.`,
+          steps: [[`${a} × ${tn}`, plain(a * tn)], [`${a} × ${u}`, plain(a * u)], [`${a * tn} + ${a * u}`, plain(t)]], ans: fmt(t) };
+      },
+      () => { // factor out
+        const a = notTen(11, 49), b = R(1, 9), c = 10 - b, t = a * 10;
+        return { l: `${a} × ${b} + ${a} × ${c}`, r: par(h(a), `${b} + ${c}`), tell: `${a} factored out.`,
+          steps: [[`${b} + ${c}`, "10"], [`${a} × 10`, plain(t)]], ans: fmt(t) };
+      },
+      () => { // money: n × ($p − $0.01)
+        const n = R(2, 6), p = R(2, 9), cents = n * 0.01, t = n * p - cents;
+        return { l: par(n, `$${p} − $0.01`), r: `${h(`${n} × $${p}`)} − ${h(`${n} × $0.01`)}`, tell: `${n} times each part.`,
+          steps: [[`${n} × $${p} = $` + "{_}", plain(n * p)], [`${n} × $0.01 = $` + "{_}", cents.toFixed(2)], [`$${n * p} − $${cents.toFixed(2)} = $` + "{_}", t.toFixed(2)]],
+          ans: "$" + t.toFixed(2) };
+      },
+      () => story([
+        (a, n) => [`A school has ${a} buses. Each bus holds ${n} students. How many students can ride?`, "students"],
+        (a, n) => [`A bookcase has ${a} shelves with ${n} books on each shelf. How many books are there?`, "books"],
+        (a, n) => [`A theater has ${a} rows with ${n} seats in each row. How many seats are there?`, "seats"],
+        (a, n) => [`A bakery bakes ${n} muffins every day. How many muffins does it bake in ${a} days?`, "muffins"]
+      ]),
+      () => story([
+        (a, n) => [`A turtle crawls about ${n} feet per minute. How far can it crawl in ${a} minutes?`, "feet"],
+        (a, n) => [`Jada rides her bike ${n} miles each week. How far does she ride in ${a} weeks?`, "miles"],
+        (a, n) => [`A plant grows ${n} millimeters each week. How much does it grow in ${a} weeks?`, "millimeters"],
+        (a, n) => [`A printer prints ${n} pages per minute. How many pages can it print in ${a} minutes?`, "pages"]
+      ]),
+      () => story([
+        (a, n) => [`Leo buys ${a} video games. Each game costs $${n}. How much does Leo spend?`, "$"],
+        (a, n) => [`A class orders ${a} pizzas that cost $${n} each. What is the total cost?`, "$"],
+        (a, n) => [`Ava buys ${a} concert tickets for $${n} each. How much does she pay?`, "$"],
+        (a, n) => [`A coach buys ${a} soccer balls at $${n} each. How much does the coach spend?`, "$"]
+      ])
+    ],
+    Identity: [
+      () => { const n = pick([R(2, 99), R(100, 9999), R(11, 999) / 10]); return { l: `${fmt(n)} × ${h(1)}`, r: fmt(n), tell: "× 1 keeps the value." }; },
+      () => { const n = pick([R(2, 99), R(100, 9999), R(11, 999) / 10]); return { l: `${fmt(n)} + ${h(0)}`, r: fmt(n), tell: "+ 0 keeps the value." }; },
+      () => { // equivalent fractions: × k/k is × 1 in disguise
+        const d = R(2, 6), nu = R(1, d - 1), k = R(2, 5);
+        return { l: `${f(nu, d)} × ${one(f(k, k))}`, r: f(nu * k, d * k),
+          tell: "Multiplying by the highlighted fraction doesn't change the value.",
+          after: `${k}/${k} is just 1 in disguise, so the value stays the same. Only the form changes.`,
+          steps: [[f(k, k), "1"]], side: false };
+      },
+      () => { // 1x = x
+        const v = pick(["x", "y", "n"]);
+        return { l: `${h(1)}${v}`, r: v, tell: `The last step of solving something like 3${v} = 12: 1${v} is just ${v}.` };
+      },
+      () => { // x + 0 = x
+        const v = pick(["x", "y", "n"]);
+        return { l: `${v} + ${h(0)}`, r: v, tell: `The last step of solving something like ${v} + 5 = 12: ${v} + 0 is just ${v}.` };
+      },
+      () => { // unit conversion: multiply by a fraction equal to 1
+        const n = R(2, 9);
+        const u = pick([
+          { big: "m", small: "cm", per: 100, what: "length" },
+          { big: "ft", small: "in", per: 12, what: "length" },
+          { big: "hr", small: "min", per: 60, what: "time" }
+        ]);
+        return { l: `${n} ${u.big} × ${oneWide(f(`${u.per} ${u.small}`, `1 ${u.big}`))}`, r: `${n * u.per} ${u.small}`,
+          tell: "Same amount, new units.",
+          after: `${u.per} ${u.small} and 1 ${u.big} are the same ${u.what}, so that fraction equals 1. Same amount, new units.`,
+          steps: [[f(`${u.per} ${u.small}`, `1 ${u.big}`), "1"]], side: false };
+      },
+      () => { // negative exponent: multiply by b^n / b^n
+        const b = R(2, 5), n = R(2, 3);
+        const pw = (e) => `${b}<sup>${e}</sup>`;
+        return { l: pw(`−${n}`), r: `${f(pw(`−${n}`), 1)} · ${one(f(pw(n), pw(n)))}`,
+          tell: "The highlighted fraction is the trick that turns a negative exponent into a fraction.",
+          after: `${b}${"²³"[n - 2]} over ${b}${"²³"[n - 2]} is 1 in disguise. It's the trick that turns a negative exponent into a fraction.`,
+          steps: [
+            [f(pw(n), pw(n)), "1"],
+            [`${pw(`−${n}`)} · ${pw(n)} = ${b}<sup>0</sup> = {_}`, "1"],
+            [`${f(1, pw(n))} = ${f(1, "{_}")}`, plain(b ** n)]
+          ], ans: f(1, pw(n)), side: false };
+      },
+      () => { // common denominators: a/d1 × d2/d2 + c/d2 × d1/d1
+        const [d1, d2] = pick([[5, 8], [3, 4], [2, 5], [3, 7], [4, 5], [2, 3], [5, 6], [3, 8]]);
+        const gcd = (x, y) => y ? gcd(y, x % y) : x;
+        const simp = (d) => { let n; do { n = R(1, d - 1); } while (gcd(n, d) !== 1); return n; };
+        const a = simp(d1), c = simp(d2), D = d1 * d2, sum = a * d2 + c * d1;
+        return { custom: `<div class="stack" role="img" aria-label="${a}/${d1} times ${d2}/${d2} equals ${a * d2}/${D}, plus ${c}/${d2} times ${d1}/${d1} equals ${c * d1}/${D}">
+            <span class="op"></span>${f(a, d1)}<span class="op">×</span>${one(f(d2, d2))}<span class="eqs">=</span>${f(a * d2, D)}
+            <span class="op">+</span>${f(c, d2)}<span class="op">×</span>${one(f(d1, d1))}<span class="eqs">=</span>${f(c * d1, D)}
+          </div>`,
+          tell: `${d2}/${d2} and ${d1}/${d1} are both 1, so each fraction keeps its value but gets the same denominator, ${D}.`,
+          side: false };
+      },
+      () => { // solving an equation, stacked like on paper: x + 0 is just x
+        const v = pick(["x", "y", "n"]), a = R(2, 9), b = a + R(2, 9), c = b - a;
+        return { custom: `<div class="solve" role="img" aria-label="${v} plus ${a} equals ${b}. Subtract ${a} from both sides. ${v} plus 0 equals ${c}. ${v} equals ${c}.">
+            <span class="dim">${v}</span><span class="dim">+</span><span class="dim">${a}</span><span class="eqs dim">=</span><span class="dim">${b}</span>
+            <span></span><span></span><span class="sub dim">−${a}</span><span></span><span class="sub dim">−${a}</span>
+            <span class="rule"></span>
+            <span>${v}</span><span>+</span><span>${h(0)}</span><span class="eqs">=</span><span>${c}</span>
+            <span>${v}</span><span></span><span></span><span class="eqs">=</span><span>${c}</span>
+          </div>`,
+          tell: "Look at the last two lines.",
+          after: `${v} + 0 is just ${v}. That's the identity property, and it's how every equation like this ends.` };
+      },
+      () => { // dividing both sides: 1x is just x
+        const v = pick(["x", "y", "n"]), a = R(2, 9), x = R(3, 15), b = a * x;
+        return { custom: `<div class="solve div" role="img" aria-label="${a}${v} over ${a} equals ${b} over ${a}. 1${v} equals ${x}. ${v} equals ${x}.">
+            <span class="dim">${f(`${a}${v}`, a)}</span><span class="eqs dim">=</span><span class="dim">${f(b, a)}</span>
+            <span>${h(1)}${v}</span><span class="eqs">=</span><span>${x}</span>
+            <span>${v}</span><span class="eqs">=</span><span>${x}</span>
+          </div>`,
+          tell: "Look at the last two lines.",
+          after: `1${v} is just ${v}, so ${v} = ${x}. That's the identity property.` };
+      }
+    ]
+  };
+
+  // a step answered by tapping an option instead of typing
+  const mc = (q, ans, others) => {
+    const opts = [...new Set([ans, ...others])];
+    for (let i = opts.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [opts[i], opts[j]] = [opts[j], opts[i]]; }
+    return Object.assign([q, ans], { choices: opts });
+  };
+  GEN["Not true"] = [
+    () => { // subtraction
+      const b = R(2, 9), a = b + R(3, 12), d = a - b;
+      return { l: `${a} ${h("−")} ${b}`, r: `${b} ${h("−")} ${a}`,
+        tell: "Work out both sides and see if they match.",
+        after: `${a} − ${b} is ${d}, but ${b} − ${a} is −${d}. Subtraction isn't commutative.`,
+        steps: [mc(`${a} − ${b}`, `${d}`, [`−${d}`, `${a + b}`, "0"]), mc(`${b} − ${a}`, `−${d}`, [`${d}`, "0", `${a + b}`])], side: false };
+    },
+    () => { // division
+      const b = R(2, 9), k = pick([2, 4, 5, 10]), a = b * k;
+      return { l: `${a} ${h("÷")} ${b}`, r: `${b} ${h("÷")} ${a}`,
+        tell: "Work out both sides and see if they match.",
+        after: `${a} ÷ ${b} is ${k}, but ${b} ÷ ${a} is 1/${k}. Division isn't commutative.`,
+        steps: [mc(`${a} ÷ ${b}`, `${k}`, [f(1, k), `${a - b}`, "0"]), mc(`${b} ÷ ${a}`, f(1, k), [`${k}`, "0", `${a - b}`])], side: false };
+    }
+  ];
+  const PROPS = ["Commutative", "Associative", "Identity", "Distributive", "Not true"];
+  const $ = (id) => document.getElementById(id);
+  let item = null, shown = null, phase = "prop", lastProp = null, lastKey = "";
+  let score = 0, total = 0, streak = 0, history = [];
+
+  /* ---------- the 31 graded problems ----------
+     Each property comes up 6 times, plus one more picked at random (31),
+     shuffled so no property shows up three times in a row.
+     After the 31st: turn-in page, then open-ended random practice. */
+  const GOAL = 31, DRILL_NAME = "Name That Property";
+  const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  let deck;
+  for (let tries = 0; tries < 500; tries++) {
+    deck = shuffle(PROPS.flatMap(p => [p, p, p, p, p, p]).concat(pick(PROPS)));
+    if (!deck.some((p, i) => i > 1 && p === deck[i - 1] && p === deck[i - 2])) break;
+  }
+  let served = 0, records = [], autoShown = false, submitted = false, submittedAt = 0;
+
+  function makeItem(forced) {
+    let p, g, key;
+    do {
+      p = forced || PROPS[Math.floor(Math.random() * PROPS.length)];
+      if (!forced && p === lastProp && Math.random() < 0.6) continue; // fewer back-to-back repeats
+      g = pick(GEN[p])();
+      key = g.custom || g.l + g.r;
+      if (key !== lastKey) break;
+    } while (true);
+    lastProp = p; lastKey = key;
+    return { p, ...g, steps: g.steps || [], hasSide: !!g.steps && g.side !== false };
+  }
+
+  function drawStats() {
+    $("score").textContent = `${score}/${total}`;
+    $("streak").textContent = streak;
+    const graded = served <= GOAL;
+    $("title").textContent = graded ? `Problem ${served} of ${GOAL}` : `Problem ${served} · extra practice`;
+    const size = graded ? GOAL : 12;
+    const recent = graded ? history.slice(0, GOAL) : history.slice(-12);
+    const cur = graded ? served - 1 : recent.length;
+    const cells = [];
+    for (let n = 0; n < size; n++) {
+      const r = recent[n];
+      cells.push(`<span class="${r === true ? "ok" : r === false ? "no" : n === cur ? "now" : ""}"></span>`);
+    }
+    $("dots").innerHTML = cells.join("");
+    $("dots").classList.toggle("extra", !graded);
+  }
+
+  function render() {
+    served++;
+    item = makeItem(served <= GOAL ? deck[served - 1] : null);
+    phase = "prop";
+    const swap = Math.random() < 0.5;
+    shown = { left: swap ? item.r : item.l, right: swap ? item.l : item.r, easyIdx: item.hasSide ? (swap ? 0 : 1) : null };
+    drawStats();
+    const e = $("eq");
+    e.innerHTML = item.custom || `<span class="side">${shown.left}</span><span class="side"><span class="eqs">=</span> ${shown.right}</span>`;
+    e.classList.remove("revealed");
+    e.closest(".question").dataset.p = item.p;
+    $("result").classList.remove("show");
+    $("feedback").classList.remove("show");
+    $("sideQ").classList.remove("show");
+    $("reveal").classList.remove("show");
+    const box = $("choices");
+    box.innerHTML = "";
+    box.classList.remove("answered");
+    $("next").hidden = true;
+    $("next").textContent = "Next";
+    window.scrollTo(0, 0);
+    PROPS.forEach((p, n) => {
+      const b = document.createElement("button");
+      b.className = "choice";
+      b.dataset.p = p;
+      b.innerHTML = `<span class="sw"></span><span class="label">${p}</span><span class="key"></span>`;
+      b.addEventListener("click", () => answer(p));
+      box.appendChild(b);
+    });
+  }
+
+  function answer(p) {
+    if (phase !== "prop") return;
+    const ok = p === item.p;
+    total++;
+    if (ok) { score++; streak++; } else streak = 0;
+    history.push(ok);
+    records.push({ q: eqText(), pick: p, p: item.p, ok });
+    drawStats();
+    $("eq").classList.add("revealed");
+    document.querySelectorAll("#choices .choice").forEach(b => {
+      b.disabled = true;
+      if (b.dataset.p === item.p) b.classList.add("right");
+      else if (b.dataset.p === p) b.classList.add("wrong");
+      else b.classList.add("dim");
+    });
+    const fb = $("feedback");
+    fb.dataset.p = item.p;
+    const v = $("verdict");
+    v.className = "verdict " + (ok ? "ok" : "no");
+    v.textContent = ok ? `✓ ${item.p}` : (p === "Not true" ? `✕ It's true. It's ${item.p}.` : item.p === "Not true" ? `✕ Not ${p}. It's not true.` : `✕ Not ${p}. It's ${item.p}.`);
+    $("choices").classList.add("answered");
+    $("tell").textContent = item.tell;
+    fb.classList.add("show");
+
+    if (shown.easyIdx === null) { reveal(false); return; }
+    phase = "side";
+    const sides = $("sides");
+    sides.innerHTML = "";
+    [shown.left, shown.right].forEach((html, n) => {
+      const b = document.createElement("button");
+      b.className = "choice sidebtn";
+      b.innerHTML = `<span>${html}</span><span class="key">${n + 1}</span>`;
+      b.addEventListener("click", () => pickSide(n));
+      sides.appendChild(b);
+    });
+    $("sideQ").classList.add("show");
+    sides.firstChild.focus({ preventScroll: true });
+    scrollTo(fb);
+  }
+
+  function pickSide(n) {
+    if (phase !== "side") return;
+    const ok = n === shown.easyIdx;
+    [...$("sides").children].forEach((b, k) => {
+      b.disabled = true;
+      if (k === shown.easyIdx) b.classList.add("right");
+      else if (k === n) b.classList.add("wrong");
+      else b.classList.add("dim");
+    });
+    const note = $("sidenote");
+    note.hidden = false;
+    note.className = "sidenote " + (ok ? "ok" : "no");
+    note.textContent = ok ? "✓ Yes, the highlighted side is easier in your head." : "✕ The highlighted side is easier in your head.";
+    $("sideQ").classList.remove("show");
+    reveal(true);
+  }
+
+  function reveal(hadSide) {
+    phase = "steps";
+    if (!hadSide) $("sidenote").hidden = true;
+    $("steps").innerHTML = "";
+    $("next").hidden = true;
+    $("reveal").classList.add("show");
+    $("solveTitle").hidden = !item.steps.length;
+    showStep(0);
+  }
+
+  const norm = (v) => String(v).trim().replace(/[,$%]/g, "").replace(/\s+/g, " ");
+  function matches(input, accepted) {
+    const x = norm(input);
+    if (!x) return false;
+    return accepted.some(a => {
+      const y = norm(a);
+      if (x === y) return true;
+      const nx = Number(x), ny = Number(y);
+      return !isNaN(nx) && !isNaN(ny) && Math.abs(nx - ny) < 1e-9;
+    });
+  }
+
+  function showStep(k) {
+    if (k >= item.steps.length) { finish(); return; }
+    if (item.steps[k].choices) { showChoiceStep(k); return; }
+    const [q, ...accepted] = item.steps[k];
+    const li = document.createElement("li");
+    const blank = `<input class="blank" type="text" autocomplete="off" inputmode="decimal" aria-label="Answer">`;
+    const body = q.includes("{_}") ? q.replace("{_}", blank) : `${q} = ${blank}`;
+    li.innerHTML = `<span>${body}</span><button class="check">Check</button><span class="mark"></span>`;
+    $("steps").appendChild(li);
+    const input = li.querySelector(".blank"), btn = li.querySelector(".check"), mark = li.querySelector(".mark");
+    let misses = 0, settled = false;
+    const submit = () => {
+      if (settled) return;
+      if (!input.value.trim()) { input.focus(); return; }
+      if (matches(input.value, accepted)) {
+        li.classList.add("ok"); mark.textContent = "✓";
+      } else if (++misses < 2) {
+        input.classList.add("bad"); input.select(); return;
+      } else {
+        input.value = accepted[0]; li.classList.add("gave"); mark.textContent = "✕";
+      }
+      settled = true;
+      input.disabled = true; btn.remove();
+      fillSlot(k);
+      showStep(k + 1);
+    };
+    btn.addEventListener("click", submit);
+    input.addEventListener("input", () => {
+      input.classList.remove("bad");
+      if (matches(input.value, accepted)) submit();
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); submit(); }
+    });
+    input.focus({ preventScroll: true });
+    scrollTo(li);
+  }
+
+  function showChoiceStep(k) {
+    const [q, ans] = item.steps[k], opts = item.steps[k].choices;
+    const li = document.createElement("li");
+    li.innerHTML = `<span>${q} =</span><span class="opts">${opts.map((o, n) => `<button class="opt" data-n="${n}">${o}</button>`).join("")}</span><span class="mark"></span>`;
+    $("steps").appendChild(li);
+    const btns = [...li.querySelectorAll(".opt")], mark = li.querySelector(".mark");
+    let misses = 0;
+    const settle = (ok) => {
+      btns.forEach((b, n) => { b.disabled = true; if (opts[n] === ans) b.classList.add("right"); else if (!b.classList.contains("wrong")) b.classList.add("dim"); });
+      li.classList.add(ok ? "ok" : "gave"); mark.textContent = ok ? "✓" : "✕";
+      li.onpick = null;
+      fillSlot(k);
+      showStep(k + 1);
+    };
+    const pickOpt = (n) => {
+      const b = btns[n];
+      if (!b || b.disabled) return;
+      if (opts[n] === ans) return settle(true);
+      b.classList.add("wrong"); b.disabled = true;
+      if (++misses >= 2) settle(false);
+    };
+    btns.forEach((b, n) => b.addEventListener("click", () => pickOpt(n)));
+    li.onpick = pickOpt;
+    btns[0].focus({ preventScroll: true });
+    scrollTo(li);
+  }
+
+  function fillSlot(k) {
+    document.querySelectorAll(`#eq [data-slot="${k}"]`).forEach(el => { el.innerHTML = item.steps[k][1]; el.classList.add("filled"); });
+  }
+
+  function finish() {
+    phase = "done";
+    if (item.after) $("tell").textContent = item.after;
+    if (item.steps.length && item.ans) {
+      $("eq").insertAdjacentHTML("beforeend", `<span class="side res"><span class="eqs">=</span> ${item.ans}</span>`);
+    }
+    const nb = $("next");
+    nb.textContent = records.length === GOAL && !autoShown ? "Turn in my work" : "Next";
+    nb.hidden = false;
+    nb.focus({ preventScroll: true });
+    scrollTo(nb);
+  }
+
+  $("helpBtn").addEventListener("click", () => $("guide").showModal());
+  $("guideClose").addEventListener("click", () => $("guide").close());
+  $("guide").addEventListener("click", (e) => { if (e.target === $("guide")) $("guide").close(); });
+
+  function scrollTo(el) {
+    el.scrollIntoView({ block: "nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }
+
+  function next() {
+    if (phase !== "done") return;
+    if (records.length >= GOAL && !autoShown) { autoShown = true; showTurnIn(); return; }
+    render();
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  $("next").addEventListener("click", next);
+  document.addEventListener("keydown", (e) => {
+    if (turninOpen() || $("guide").open) return;
+    if (e.target.classList && e.target.classList.contains("blank")) return;
+    if (phase === "prop" && /^[1-5]$/.test(e.key)) { answer(PROPS[+e.key - 1]); e.preventDefault(); }
+    else if (phase === "side" && /^[12]$/.test(e.key)) { pickSide(+e.key - 1); e.preventDefault(); }
+    else if (phase === "steps" && /^[1-4]$/.test(e.key)) {
+      const li = [...$("steps").children].pop();
+      if (li && li.onpick) { li.onpick(+e.key - 1); e.preventDefault(); }
+    }
+    else if (phase === "done" && e.key === "Enter" && document.activeElement !== $("next")) { next(); e.preventDefault(); }
+  });
+
+  /* the question as plain text, for the list of work on the turn-in page */
+  function eqText() {
+    const eq = $("eq");
+    const img = eq.querySelector('[role="img"][aria-label]');
+    if (img) return img.getAttribute("aria-label").replace(/\s+/g, " ").trim();
+    const c = (eq.querySelector(".storyeq") || eq).cloneNode(true);
+    c.querySelectorAll("svg").forEach(n => n.remove());
+    c.querySelectorAll("sup").forEach(n => { n.textContent = "^" + n.textContent; });
+    c.querySelectorAll(".eqs").forEach(n => { n.textContent = " = "; });
+    c.querySelectorAll(".frac").forEach(n => { const [a, b] = n.children; n.textContent = ` ${a.textContent}/${b.textContent} `; });
+    return c.textContent.replace(/\s+/g, " ").trim();
+  }
+
+  /* ============================================================
+     Turning it in: same Google Form and fields as the
+     Distributive Property + Factoring drill. The Turn in button
+     opens this page any time; sending again later replaces it.
+     ============================================================ */
+  const escHtml = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const rightCount = () => records.filter(r => r.ok).length;
+  function turninOpen() { return !$("turnin").classList.contains("off"); }
+
+  function showTurnIn() {
+    const done = records.length, right = rightCount();
+    if (done >= GOAL) {
+      $("ti-title").textContent = done > GOAL ? `${done} problems done` : `All ${GOAL} done`;
+      $("ti-sub").textContent = "Enter your period and name to turn in your work. After that you can keep practicing as long as you like.";
+      $("ti-after-lab").textContent = "Want more practice?";
+      $("ti-back").textContent = "Keep practicing";
+    } else {
+      $("ti-title").textContent = "Turn in your work so far";
+      $("ti-sub").textContent = `You have finished ${done} of ${GOAL}. Enter your period and name to turn in what you have. `
+        + "Nothing is lost \u2014 you can go back, keep working, and send it again. The newer one counts.";
+      $("ti-after-lab").textContent = "Not done yet?";
+      $("ti-back").textContent = "Go back and keep working";
+    }
+    $("ti-recap").innerHTML = `<div>Problems<b>${done}</b></div><div>Right<b>${right}</b></div><div>Missed<b>${done - right}</b></div>`;
+    $("ti-bars").innerHTML = done ? PROPS.map(p => {
+      const of = records.filter(r => r.p === p), n = of.filter(r => r.ok).length;
+      const pct = of.length ? Math.round(100 * n / of.length) : 0;
+      return `<div class="bar-row" data-p="${p}"><span>${p}</span><span class="bar"><span style="width:${pct}%"></span></span><span class="n">${n}/${of.length}</span></div>`;
+    }).join("") : "";
+    $("ti-log").innerHTML = done
+      ? '<div class="ti-log">' + records.map((r, i) =>
+          `<div class="ti-row"><span class="ti-n">${i + 1}.</span><span class="ti-q">${escHtml(r.q)}</span>`
+          + (r.ok ? `<span class="ti-k">\u2713 ${r.p}</span>`
+                  : `<span class="ti-k no">\u2715 picked ${r.pick}, it's ${r.p}</span>`) + `</div>`).join("") + "</div>"
+      : '<div class="ti-empty">Nothing answered yet \u2014 answered problems show up here.</div>';
+
+    const more = submitted && done > submittedAt;
+    $("gform").classList.toggle("off", submitted && !more);
+    if (more) {
+      $("ti-feedback").innerHTML = `<span class="note">You turned in ${submittedAt} \u2014 you have ${done} now. Send it again and the newer one counts.</span>`;
+      $("ti-submit").textContent = "Send updated results";
+    } else if (!submitted) {
+      $("ti-feedback").innerHTML = "";
+      $("ti-submit").textContent = "Submit Results";
+    }
+    $("formScore").value = done;
+    $("turnin").classList.remove("off");
+    $("turnin").scrollTop = 0;
+    if (!submitted || more) setTimeout(() => $(submitted ? "ti-submit" : "studentPeriod").focus(), 50);
+  }
+
+  // back to the drill: an answered problem moves on, an unanswered one stays put
+  function backToPractice() {
+    $("turnin").classList.add("off");
+    if (phase === "done" && (records.length !== GOAL || autoShown)) {
+      if (records.length >= GOAL) autoShown = true;
+      render();
+    } else if (phase === "done") { $("next").focus({ preventScroll: true }); }
+  }
+
+  window.onHiddenFrameLoad = function () {
+    if (!submitted) return;
+    $("ti-feedback").innerHTML = '<span class="ok">Successfully submitted. '
+      + (records.length >= GOAL ? "You can close this page, or keep practicing." : "You can close this page, or go back and keep working.")
+      + "</span>";
+    $("gform").classList.add("off");
+  };
+
+  function nameCheck() {
+    const ln = $("lastName").value.trim(), fn = $("firstName").value.trim();
+    const row = (t, v) => `<div class="row"><span class="t">${t}</span><span class="v${v ? "" : " empty"}">${v ? escHtml(v) : "\u2014"}</span></div>`;
+    $("nameCheck").innerHTML = '<div class="head">This is what will be sent \u2014 check it is the right way round:</div>'
+      + row("Last name", ln) + row("First name", fn) + row("Roll call", ln && fn ? `${ln}, ${fn}` : "");
+  }
+  ["lastName", "firstName"].forEach(id => $(id).addEventListener("input", nameCheck));
+  nameCheck();
+
+  $("gform").addEventListener("submit", () => {
+    const ln = $("lastName").value.trim(), fn = $("firstName").value.trim();
+    $("studentName").value = `Period ${$("studentPeriod").value.trim()} \u2014 ${ln} \u2014 ${fn}`
+      + ` \u2014 ${rightCount()} right \u2014 ${DRILL_NAME} (${records.length} problems)`;
+    $("formScore").value = records.length;
+    submitted = true;
+    submittedAt = records.length;
+  });
+
+  $("ti-back").addEventListener("click", backToPractice);
+  $("turninBtn").addEventListener("click", showTurnIn);
+
+  render();
+})();
+</script>
+</body>
+</html>
