@@ -4,9 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Name That Property · 31 problems</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #F6F5F2;
@@ -18,7 +15,7 @@
   --wrong-soft: #FCE6E7;
   --empty: #E2E0DA;
   --ok: #2E9E5B; --ok-soft: #E1F4E8;
-  --c-comm: #E4572E; --c-comm-soft: #FDE8E1;
+  --c-comm: #2563D9; --c-comm-soft: #E3ECFC;
   --c-assoc: #7B4FD6; --c-assoc-soft: #EFE8FC;
   --c-iden: #B98200; --c-iden-soft: #FFF2CF;
   --c-dist: #0E8F7E; --c-dist-soft: #DCF3EF;
@@ -31,7 +28,7 @@
   :root:not([data-theme="light"]) {
     --bg: #1A1A1A; --surface: #252525; --text: #F2F2F2; --muted: #B3B3B3; --line: #3A3A3A;
     --wrong: #FF6B70; --wrong-soft: #3D2224; --empty: #3A3A3A; --ok: #5FD68E; --ok-soft: #1C3527;
-    --c-comm: #FF8A65; --c-comm-soft: #3F2820;
+    --c-comm: #7EA8FF; --c-comm-soft: #1E2A44;
     --c-assoc: #B39DFF; --c-assoc-soft: #2F2847;
     --c-iden: #FFCC4D; --c-iden-soft: #3B321A;
     --c-dist: #4FD1BC; --c-dist-soft: #1B3632;
@@ -41,7 +38,7 @@
 :root[data-theme="dark"] {
   --bg: #1A1A1A; --surface: #252525; --text: #F2F2F2; --muted: #B3B3B3; --line: #3A3A3A;
   --wrong: #FF6B70; --wrong-soft: #3D2224; --empty: #3A3A3A; --ok: #5FD68E; --ok-soft: #1C3527;
-  --c-comm: #FF8A65; --c-comm-soft: #3F2820;
+  --c-comm: #7EA8FF; --c-comm-soft: #1E2A44;
   --c-assoc: #B39DFF; --c-assoc-soft: #2F2847;
   --c-iden: #FFCC4D; --c-iden-soft: #3B321A;
   --c-dist: #4FD1BC; --c-dist-soft: #1B3632;
@@ -53,7 +50,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: "Lexend", "Segoe UI", system-ui, sans-serif;
+  font-family: Tahoma, Verdana, "Segoe UI", sans-serif;
   font-size: 1.125rem;
   line-height: 1.6;
 }
@@ -206,7 +203,42 @@ sup { font-size: 0.6em; line-height: 0; }
 #sideQ, #reveal { display: none; }
 #sideQ.show, #reveal.show { display: block; }
 #sideQ { margin-bottom: 1.25rem; }
+.sides.with-or { grid-template-columns: 1fr auto 1fr; align-items: center; }
+@media (max-width: 540px) { .sides.with-or .key { display: none; } }
+.sides .or { color: var(--muted); font-weight: 600; font-size: .95rem; }
+.question #sideQ { margin: .6rem 0 0; }
 .sidenote { font-weight: 600; margin: 0.75rem 0 0; }
+/* Not true: the value of each side, shown under it */
+.eq .nt-side { display: inline-flex; flex-direction: column; align-items: center; }
+.eq .nt-val { font-size: .85em; font-weight: 700; color: var(--text); margin-top: .1em; animation: idpop .45s cubic-bezier(.3,1.6,.6,1) both; }
+.eq .nt-side + .nt-ne + .nt-side .nt-val { animation-delay: .2s; }
+.eq .nt-val .eqs { color: var(--muted); }
+.eq .nt-val .frac { font-size: .8em; }
+.eq .nt-expr { white-space: nowrap; }
+.eq .nt-ne { font-weight: 700; color: var(--text); align-self: flex-start; }
+/* mental math intro: 18 × 9 → 2 × 9 × 9 */
+.mm { display: inline-flex; align-items: center; gap: .4em; white-space: nowrap; }
+.mm .mm-n { display: inline-block; }
+.mm .eqs { display: inline-block; }
+.mm-whole { border-radius: .2em; padding: 0 .1em; }
+.mm-pulse { animation: mmpulse .9s ease-in-out; }
+@keyframes mmpulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; } 40%, 60% { transform: scale(1.35); box-shadow: 0 0 0 3px var(--text); } }
+.mm-split { position: relative; display: inline-flex; align-items: center; gap: .4em; }
+.mm-brace { position: absolute; left: -.1em; right: -.1em; top: 100%; height: .32em; margin-top: -.05em;
+  border: 2px solid var(--muted); border-top: 0; border-radius: 0 0 .3em .3em; }
+.mm-brace span { position: absolute; left: 50%; top: 100%; transform: translate(-50%, -.05em); font-size: .62em; font-weight: 700;
+  color: var(--muted); background: var(--surface); padding: 0 .3em; line-height: 1.2; }
+.eq.mm-two { flex-direction: column; row-gap: .9em; }
+.eq.mm-two .mm { font-size: .78em; color: var(--muted); padding-bottom: .5em; }
+.eq.mm-two .mm .eqs { color: inherit; }
+.mm ~ .storyeq .res { margin-left: .35em; }
+.sides .eq-mid { font-size: 1.35rem; font-weight: 400; }
+.sides.mm-in > * { animation: idpop .45s cubic-bezier(.3,1.6,.6,1) both; }
+.sides.mm-in > :nth-child(2) { animation-delay: .12s; }
+.sides.mm-in > :nth-child(3) { animation-delay: .24s; }
+.question:has(.mm) .eq { padding-bottom: 1em; }
+.eq .mm { font-size: 1.15em; }
+.eq.mm-two .mm { padding-bottom: .7em; }
 .sidenote.ok { color: var(--ok); } .sidenote.no { color: var(--wrong); }
 @media (min-width: 900px) {
   .choices, .guide-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
@@ -357,6 +389,116 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
 .ti-k { font-size: .85rem; white-space: nowrap; color: var(--ok); font-weight: 600; }
 .ti-k.no { color: var(--wrong); }
 @media (max-width: 540px) { #streakBox { display: none; } .ti-recap { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- "Commutative = commute" memory card ---------- */
+.commute { --c: var(--c-comm); --c-soft: var(--c-comm-soft);
+  background: var(--c-soft); border-radius: 14px; padding: .75rem 1rem .85rem; margin: .1rem 0 .7rem; text-align: center; }
+.cm-word { font-size: 1.4rem; font-weight: 700; letter-spacing: .05em; line-height: 1.2; }
+.cm-root { color: var(--surface); background: var(--c); border-radius: 6px; padding: 0 .15em; }
+.cm-rest { color: var(--muted); }
+.cm-sub { font-size: .95rem; margin: .25rem 0 .35rem; line-height: 1.4; }
+.cm-sub b { color: var(--c); }
+.cm-road { display: flex; align-items: flex-end; gap: .4rem; max-width: 20rem; margin: 0 auto; font-size: 1.5rem; line-height: 1; }
+.cm-place { display: flex; flex-direction: column; align-items: center; font-size: 1.5rem; }
+.cm-place small { font-size: .7rem; color: var(--muted); font-weight: 600; margin-top: .15rem; }
+.cm-track { flex: 1; position: relative; height: 1.7rem; margin-bottom: 1.1rem; border-bottom: 3px dashed var(--muted); }
+.cm-car { position: absolute; left: 0; bottom: .05rem; display: inline-block; transform: translateX(0) scaleX(-1); }
+.cm-stage { display: flex; justify-content: center; align-items: center; gap: .35em; font-size: 2.1rem; font-weight: 700;
+  padding: .75em 0 .75em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.cm-op { color: var(--muted); font-weight: 400; }
+.cm-sum { color: var(--c); }
+.cm-tile { position: relative; display: inline-block; min-width: 1.45em; text-align: center; padding: .04em .15em .14em;
+  border-radius: .38em .38em .16em .16em; border: 3px solid var(--c); background: var(--surface); color: var(--c); }
+.cm-tile[data-k="b"] { background: var(--c); color: var(--surface); }
+.cm-tile .frac, .as-n .frac { font-size: .62em; }
+.cm-tile::before, .cm-tile::after { content: ""; position: absolute; bottom: -.22em; width: .3em; height: .3em; border-radius: 50%;
+  background: var(--text); border: 2px solid var(--c-soft); }
+.cm-tile::before { left: .14em; } .cm-tile::after { right: .14em; }
+.cm-cap { font-weight: 600; margin: 0; min-height: 1.5em; font-size: 1.02rem; line-height: 1.4; }
+.cm-replay, .cm-open { font: inherit; font-size: .88rem; font-weight: 600; color: var(--c); background: var(--surface);
+  border: 2px solid var(--c); border-radius: 999px; padding: .25rem .9rem; margin-top: .5rem; cursor: pointer; min-height: 38px; }
+.cm-open { margin: 0 0 .6rem; }
+.cm-replay:focus-visible, .cm-open:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+.commute.compact .cm-stage { font-size: 1.7rem; padding: .7em 0 .7em; }
+.commute.compact .cm-word { font-size: 1.2rem; }
+dialog.guide .commute { margin: 0 0 .75rem; }
+/* associative: same look, purple; the numbers sit still and the parentheses (a friend-group hug) slide */
+.commute.assoc { --c: var(--c-assoc); --c-soft: var(--c-assoc-soft); }
+.commute { position: relative; }
+.commute .cm-replay { position: absolute; top: .5rem; right: .5rem; margin: 0; width: 38px; height: 38px; min-height: 0; padding: 0;
+  font-size: 1.15rem; line-height: 1; display: flex; align-items: center; justify-content: center; }
+.commute .cm-cap { color: var(--c); font-size: 1.05rem; }
+.commute .cm-road { margin-top: .3rem; }
+.cm-emoji { letter-spacing: 0; }
+.commute .cm-word { padding: 0 2.6rem; }
+.commute.assoc .cm-word { margin-bottom: .45rem; }
+.cm-rule { margin: .5rem auto 0; font-size: .88rem; font-weight: 600; color: var(--text); background: var(--surface);
+  border-radius: 10px; padding: .35rem .7rem; max-width: 26rem; line-height: 1.45; }
+.cm-rule .ln { display: block; }
+dialog.guide .commute:first-child .cm-rule { display: none; }
+.cm-rule .k-c { color: var(--c-comm); } .cm-rule .k-a { color: var(--c-assoc); }
+.as-stage { position: relative; display: flex; justify-content: center; align-items: center; gap: .3em;
+  font-size: 2.1rem; font-weight: 700; padding: .6em 0 .55em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.commute.compact .as-stage { font-size: 1.7rem; padding: .55em 0 .5em; }
+.as-n { position: relative; z-index: 1; margin: 0 .72em; }
+.as-stage .cm-op { position: relative; z-index: 1; }
+.as-bub { position: absolute; z-index: 0; top: 0; height: 0; left: 0; width: 0; border-radius: .8em;
+  background: var(--surface); border: 2px dashed var(--c); }
+.as-p { position: absolute; z-index: 2; top: 0; left: 0; color: var(--c); display: block; }
+.as-p svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.as-ten { position: absolute; z-index: 3; top: 0; left: 0; font-size: .5em; font-weight: 700; color: var(--surface); background: var(--c);
+  border-radius: 999px; padding: .1em .55em; transform: translateX(-50%) scale(0); transition: transform .35s cubic-bezier(.3,1.6,.6,1); }
+.as-ten.show { transform: translateX(-50%) scale(1); }
+.as-moving .as-bub { transition: left .9s ease-in-out, width .9s ease-in-out; }
+.as-n { line-height: 1.1; }
+.as-moving .as-p { transition: left .9s ease-in-out; }
+@media (max-width: 380px) { .as-stage { font-size: 1.55rem !important; } }
+
+/* distributive: the outside number is the mail carrier, a copy goes to each part */
+.commute.dist { --c: var(--c-dist); --c-soft: var(--c-dist-soft); }
+.ds-stage { position: relative; display: flex; justify-content: center; align-items: center; gap: .22em;
+  font-size: 2.1rem; font-weight: 700; padding: 1.25em 0 .5em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.commute.compact .ds-stage { font-size: 1.7rem; }
+.ds-stage .k { display: inline-block; position: relative; z-index: 1; }
+.ds-stage .k.copy { color: var(--c); }
+.ds-stage .k.sym { color: var(--muted); font-weight: 400; }
+.ds-arrows { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; }
+.ds-arrows path { fill: none; stroke: var(--c); stroke-width: 3; stroke-linecap: round; }
+.ds-arrows polygon { fill: var(--c); opacity: 0; transition: opacity .15s; }
+.ds-arrows polygon.on { opacity: 1; }
+.ds-ghost { position: absolute; z-index: 2; color: var(--c); }
+
+/* not true: the numbers try to swap but crash into a roadblock at − or ÷ */
+.commute.nope { --c: var(--c-none); --c-soft: var(--c-none-soft); }
+.nt-block { position: absolute; left: 50%; bottom: .05rem; transform: translateX(-50%); z-index: 1; }
+.nt-op { position: relative; z-index: 2; display: inline-block; color: var(--wrong) !important; font-weight: 700 !important; }
+.nt-op.crash { animation: ntcrash .5s ease-out; }
+@keyframes ntcrash { 0% { transform: scale(1); } 20% { transform: scale(1.6) rotate(-12deg); } 45% { transform: scale(1.3) rotate(10deg); } 70% { transform: scale(1.15) rotate(-5deg); } 100% { transform: scale(1); } }
+.nt-boom { position: absolute; z-index: 3; left: 50%; top: 50%; font-size: .9em; transform: translate(-50%, -60%) scale(0); opacity: 0; transition: transform .25s cubic-bezier(.3,1.6,.6,1), opacity .25s; }
+.nt-boom.show { transform: translate(-50%, -60%) scale(1); opacity: 1; }
+.commute.nope .cm-stage { position: relative; }
+
+/* identity: the number on an ID card; × 1 / + 0 bumps it and nothing changes */
+.commute.ident { --c: var(--c-iden); --c-soft: var(--c-iden-soft); }
+.id-stage { display: flex; justify-content: center; align-items: center; gap: .6em; font-size: 2.1rem; font-weight: 700;
+  padding: .75em 0 .55em; line-height: 1.1; }
+.commute.compact .id-stage { font-size: 1.7rem; }
+.id-card { position: relative; display: inline-flex; align-items: center; gap: .35em; border: 3px solid var(--c); border-radius: .3em;
+  background: var(--surface); padding: .22em .55em .22em .3em; transform-origin: 50% 90%; }
+.id-chip { font-size: .4em; font-weight: 700; letter-spacing: .06em; color: var(--surface); background: var(--c); border-radius: .35em; padding: .25em .45em; }
+.id-tok { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: .2em; color: var(--c);
+  border: 2px dashed var(--c); border-radius: .4em; padding: .1em .35em; background: var(--c-soft); }
+.id-val { position: relative; display: inline-flex; align-items: center; }
+.id-val .frac { font-size: .62em; }
+.id-mask { position: absolute; top: -.8em; right: -.95em; font-size: .62em; transition: transform .6s ease-in, opacity .6s ease-in; }
+.id-tok.unmasked .id-mask { transform: translateY(2.2em) rotate(50deg); opacity: 0; }
+.id-pop { animation: idpop .45s cubic-bezier(.3,1.6,.6,1); }
+@keyframes idpop { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.id-card.wiggle { animation: idwig .55s ease-out; }
+@keyframes idwig { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-5deg); } 50% { transform: rotate(4deg); } 75% { transform: rotate(-2deg); } }
+@media (max-width: 380px) { .ds-stage, .id-stage { font-size: 1.45rem !important; } }
+@media (max-width: 380px) { .cm-stage { font-size: 1.6rem !important; } .cm-word { font-size: 1.1rem !important; } }
+@media (max-height: 680px) { .commute.compact { padding: .5rem .8rem .6rem; } .commute.compact .cm-stage { padding: .4em 0 .35em; } }
 </style>
 </head>
 <body>
@@ -383,6 +525,7 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
     <div class="feedback" id="feedback" aria-live="polite">
       <div class="fb-head"><p class="verdict" id="verdict"></p><button class="btn" id="next" hidden>Next</button></div>
       <p class="tell" id="tell"></p>
+      <div id="commuteSlot"></div>
       <div id="sideQ">
         <p class="steps-title">Easier in your head?</p>
         <div class="sides" id="sides"></div>
@@ -399,6 +542,7 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
 
   <dialog class="guide" id="guide" aria-labelledby="guideTitle">
     <div class="guide-head"><h2 id="guideTitle">Help</h2><button class="helpbtn" id="guideClose" type="button">Close</button></div>
+    <div id="guideCommute"></div>
     <div class="guide-grid">
       <div class="gcard" data-p="Commutative"><h3>Commutative</h3><p>Order changes<span class="ex">4 + 9 = 9 + 4</span></p></div>
       <div class="gcard" data-p="Associative"><h3>Associative</h3><p>Parentheses move<span class="ex">(2 + 8) + 5 = 2 + (8 + 5)</span></p></div>
@@ -413,18 +557,12 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
 <div class="turnin off" id="turnin" role="dialog" aria-labelledby="ti-title">
   <div class="ti-inner">
     <h2 id="ti-title">All 31 done</h2>
-    <p class="ti-sub" id="ti-sub">Enter your period and name to turn in your work.</p>
 
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none"
             onload="if(window.onHiddenFrameLoad)onHiddenFrameLoad()"></iframe>
 
     <form action="https://docs.google.com/forms/d/e/1FAIpQLSe4_Gnrq1zyrttA3lSgrVBtMkaVaoMim31ByzoH-orxmfDB2A/formResponse"
           method="POST" target="hidden_iframe" id="gform">
-      <div class="ti-warn">
-        Read the box labels before you type. Your <b>LAST name</b> goes in the
-        <b>Last name</b> box and your <b>FIRST name</b> goes in the <b>First name</b> box.
-        Swapped names cannot be matched to the roster and count as missing.
-      </div>
       <div class="ti-field">
         <label for="studentPeriod"><span class="ti-num">1</span>Period</label>
         <input type="number" id="studentPeriod" placeholder="e.g. 3" min="1" max="10" required>
@@ -483,7 +621,7 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
     const tn = n - n % 10, u = n % 10, t = a * n;
     const [text, unit] = pick(templates)(a, n);
     const money = unit === "$";
-    return { custom: `<div class="story"><p>${text}</p><div class="storyeq">${a}(${n}) <span class="eqs">=</span> ${h(`${a}(${tn})`)} + ${h(`${a}(${u})`)}</div></div>`,
+    return { mem: { a, parts: [tn, u], op: "+" }, custom: `<div class="story"><p>${text}</p><div class="storyeq">${a}(${n}) <span class="eqs">=</span> ${h(`${a}(${tn})`)} + ${h(`${a}(${u})`)}</div></div>`,
       tell: `Split ${n} into ${tn} + ${u}, then multiply each part by ${a}.`,
       steps: [[`${a} × ${tn}`, plain(a * tn)], [`${a} × ${u}`, plain(a * u)],
         [money ? `${a * tn} + ${a * u} = $` + "{_}" : `${a * tn} + ${a * u} = {_} ${unit}`, plain(t)]],
@@ -505,95 +643,95 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
     Commutative: [
       () => {
         const T = roundT(), a = splitT(T), c = T - a, b = clearB(a, c, 12, 98), t = T + b;
-        return { l: `${a} + ${b} + ${h(c)}`, r: `${a} + ${h(c)} + ${b}`, tell: `${c} moved next to ${a}.`,
+        return { mem: { t: [a, b, c], op: "+" }, l: `${a} + ${b} + ${h(c)}`, r: `${a} + ${h(c)} + ${b}`, tell: `${c} moved next to ${a}.`,
           steps: [[`${a} + ${c}`, plain(T)], [`${T} + ${b}`, plain(t)]], ans: fmt(t) };
       },
       () => {
         const [x, y] = pick(PAIRS_A), b = awkward(x, 11, 99), P = x * y, t = P * b;
-        return { l: `${x} × ${b} × ${h(y)}`, r: `${x} × ${h(y)} × ${b}`, tell: `${y} moved next to ${x}.`,
+        return { mem: { t: [x, b, y], op: "×" }, l: `${x} × ${b} × ${h(y)}`, r: `${x} × ${h(y)} × ${b}`, tell: `${y} moved next to ${x}.`,
           steps: [[`${x} × ${y}`, plain(P)], [`${fmt(P)} × ${b}`, plain(t)]], ans: fmt(t) };
       },
       () => {
         const a = R(2, 9), c = 10 - a, b = clearB(a, c, 11, 99), t = 10 + b;
-        return { l: `${a} + ${b} + ${h(c)}`, r: `${a} + ${h(c)} + ${b}`, tell: `${c} moved next to ${a}.`,
+        return { mem: { t: [a, b, c], op: "+" }, l: `${a} + ${b} + ${h(c)}`, r: `${a} + ${h(c)} + ${b}`, tell: `${c} moved next to ${a}.`,
           steps: [[`${a} + ${c}`, "10"], [`10 + ${b}`, plain(t)]], ans: fmt(t) };
       },
       () => { // two-digit + one-digit make a round number: 47 + 36 + 3
         const T = pick([20, 30, 40, 50, 60, 70, 80, 90]), c = R(1, 8), a = T - c, b = clearB(a, c, 21, 89), t = T + b;
-        return { l: `${a} + ${b} + ${h(c)}`, r: `${a} + ${h(c)} + ${b}`, tell: `${c} moved next to ${a}.`,
+        return { mem: { t: [a, b, c], op: "+" }, l: `${a} + ${b} + ${h(c)}`, r: `${a} + ${h(c)} + ${b}`, tell: `${c} moved next to ${a}.`,
           steps: [[`${a} + ${c}`, plain(T)], [`${T} + ${b}`, plain(t)]], ans: fmt(t) };
       },
       () => { // fractions that make a whole number: ½ × 27 × 6
         const [d, y] = pick(FRAC), fr = f(1, d);
         let b; do { b = notTen(11, 49); } while (b % d === 0); // ½ × b shouldn't come out even
         const P = y / d, t = P * b;
-        return { l: `${fr} × ${b} × ${h(y)}`, r: `${fr} × ${h(y)} × ${b}`, tell: `${y} moved next to 1/${d}.`,
+        return { mem: { t: [fr, b, y], op: "×" }, l: `${fr} × ${b} × ${h(y)}`, r: `${fr} × ${h(y)} × ${b}`, tell: `${y} moved next to 1/${d}.`,
           steps: [[`${fr} × ${y}`, plain(P)], [`${P} × ${b}`, plain(t)]], ans: fmt(t) };
       },
       () => { // multiplication written with parentheses: 4(17)(25) = 4(25)(17)
         const [x, y] = pick(PAIRS_A), b = awkward(x, 11, 49), P = x * y, t = P * b;
-        return { l: `${x}(${b})(${h(y)})`, r: `${x}(${h(y)})(${b})`, tell: `${y} moved next to ${x}.`,
+        return { mem: { t: [x, `(${b})`, `(${y})`], op: "" }, l: `${x}(${b})(${h(y)})`, r: `${x}(${h(y)})(${b})`, tell: `${y} moved next to ${x}.`,
           steps: [[`${x}(${y})`, plain(P)], [`${P}(${b})`, plain(t)]], ans: fmt(t) };
       }
     ],
     Associative: [
       () => {
         const T = roundT(), a = splitT(T), c = T - a, b = clearB(a, c, 11, 99), t = b + T;
-        return { l: `(${b} + ${a}) + ${c}`, r: `${b} + ${h(`(${a} + ${c})`)}`, tell: "Same order, parentheses moved.",
+        return { mem: { t: [b, a, c], op: "+", from: 0, to: 1 }, l: `(${b} + ${a}) + ${c}`, r: `${b} + ${h(`(${a} + ${c})`)}`, tell: "Same order, parentheses moved.",
           steps: [[`${a} + ${c}`, plain(T)], [`${b} + ${T}`, plain(t)]], ans: fmt(t) };
       },
       () => {
         const [x, y] = pick(PAIRS_A), b = awkward(x, 11, 99), P = x * y, t = b * P;
-        return { l: `(${b} × ${x}) × ${y}`, r: `${b} × ${h(`(${x} × ${y})`)}`, tell: "Same order, parentheses moved.",
+        return { mem: { t: [b, x, y], op: "×", from: 0, to: 1 }, l: `(${b} × ${x}) × ${y}`, r: `${b} × ${h(`(${x} × ${y})`)}`, tell: "Same order, parentheses moved.",
           steps: [[`${x} × ${y}`, plain(P)], [`${b} × ${fmt(P)}`, plain(t)]], ans: fmt(t) };
       },
       () => {
         const a = R(1, 8) + 0.5, c = 10 - a, b = R(11, 99) / 10, t = b + 10;
         if (b % 1 === 0) return GEN.Associative[0]();
-        return { l: `(${plain(b)} + ${plain(a)}) + ${plain(c)}`, r: `${plain(b)} + ${h(`(${plain(a)} + ${plain(c)})`)}`, tell: "Same order, parentheses moved.",
+        return { mem: { t: [plain(b), plain(a), plain(c)], op: "+", from: 0, to: 1 }, l: `(${plain(b)} + ${plain(a)}) + ${plain(c)}`, r: `${plain(b)} + ${h(`(${plain(a)} + ${plain(c)})`)}`, tell: "Same order, parentheses moved.",
           steps: [[`${plain(a)} + ${plain(c)}`, "10"], [`${plain(b)} + 10`, plain(t)]], ans: fmt(t) };
       },
       () => { // almost-round: (146 + 299) + 1 = 146 + (299 + 1)
         const T = pick([100, 200, 300, 400, 500, 1000]), c = R(1, 3), a = T - c;
         let b; do { b = R(101, 899); } while (b % 10 === 0);
         const t = b + T;
-        return { l: `(${b} + ${a}) + ${c}`, r: `${b} + ${h(`(${a} + ${c})`)}`, tell: "Same order, parentheses moved.",
+        return { mem: { t: [b, a, c], op: "+", from: 0, to: 1 }, l: `(${b} + ${a}) + ${c}`, r: `${b} + ${h(`(${a} + ${c})`)}`, tell: "Same order, parentheses moved.",
           steps: [[`${a} + ${c}`, plain(T)], [`${b} + ${T}`, plain(t)]], ans: fmt(t) };
       },
       () => { // fractions: (18 × ½) × 8 = 18 × (½ × 8)
         const [d, y] = pick(FRAC);
         let b; do { b = notTen(11, 49); } while (b % d === 0); // b × 1/d shouldn't come out even
         const P = y / d, t = b * P, fr = f(1, d);
-        return { l: `(${b} × ${fr}) × ${y}`, r: `${b} × ${h(`(${fr} × ${y})`)}`, tell: "Same order, parentheses moved.",
+        return { mem: { t: [b, fr, y], op: "×", from: 0, to: 1 }, l: `(${b} × ${fr}) × ${y}`, r: `${b} × ${h(`(${fr} × ${y})`)}`, tell: "Same order, parentheses moved.",
           steps: [[`${fr} × ${y}`, plain(P)], [`${b} × ${P}`, plain(t)]], ans: fmt(t) };
       },
       () => { // 5(2 × 37) = (5 × 2) × 37
         const [a, c] = pick([[5, 2], [2, 5], [25, 4], [4, 25], [50, 2], [20, 5]]), n = awkward(c, 11, 49), P = a * c, t = P * n;
-        return { l: `${a}(${c} × ${n})`, r: `${h(`(${a} × ${c})`)} × ${n}`, tell: "Same order, parentheses moved.",
+        return { mem: { t: [a, c, n], op: "×", from: 1, to: 0 }, l: `${a}(${c} × ${n})`, r: `${h(`(${a} × ${c})`)} × ${n}`, tell: "Same order, parentheses moved.",
           steps: [[`${a} × ${c}`, plain(P)], [`${P} × ${n}`, plain(t)]], ans: fmt(t) };
       }
     ],
     Distributive: [
       () => { // a × (round − k)
         const B = pick([20, 30, 40, 50, 60, 100, 200]), a = R(3, 9), k = R(1, 3), t = a * B - a * k;
-        return { l: par(a, `${B} − ${k}`), r: `${h(`${a} × ${B}`)} − ${h(`${a} × ${k}`)}`, tell: `${a} times each part.`,
+        return { mem: { a, parts: [B, k], op: "−" }, l: par(a, `${B} − ${k}`), r: `${h(`${a} × ${B}`)} − ${h(`${a} × ${k}`)}`, tell: `${a} times each part.`,
           steps: [[`${a} × ${B}`, plain(a * B)], [`${a} × ${k}`, plain(a * k)], [`${a * B} − ${a * k}`, plain(t)]], ans: fmt(t) };
       },
       () => { // a × (tens + ones)
         const a = R(3, 9);
         let tn, u; do { tn = R(2, 9) * 10; u = R(1, 9); } while ((tn + u) % 25 === 0);
         const t = a * (tn + u);
-        return { l: par(a, `${tn} + ${u}`), r: `${h(`${a} × ${tn}`)} + ${h(`${a} × ${u}`)}`, tell: `${a} times each part.`,
+        return { mem: { a, parts: [tn, u], op: "+" }, l: par(a, `${tn} + ${u}`), r: `${h(`${a} × ${tn}`)} + ${h(`${a} × ${u}`)}`, tell: `${a} times each part.`,
           steps: [[`${a} × ${tn}`, plain(a * tn)], [`${a} × ${u}`, plain(a * u)], [`${a * tn} + ${a * u}`, plain(t)]], ans: fmt(t) };
       },
       () => { // factor out
         const a = notTen(11, 49), b = R(1, 9), c = 10 - b, t = a * 10;
-        return { l: `${a} × ${b} + ${a} × ${c}`, r: par(h(a), `${b} + ${c}`), tell: `${a} factored out.`,
+        return { mem: { a, parts: [b, c], op: "+", factor: true }, l: `${a} × ${b} + ${a} × ${c}`, r: par(h(a), `${b} + ${c}`), tell: `${a} factored out.`,
           steps: [[`${b} + ${c}`, "10"], [`${a} × 10`, plain(t)]], ans: fmt(t) };
       },
       () => { // money: n × ($p − $0.01)
         const n = R(2, 6), p = R(2, 9), cents = n * 0.01, t = n * p - cents;
-        return { l: par(n, `$${p} − $0.01`), r: `${h(`${n} × $${p}`)} − ${h(`${n} × $0.01`)}`, tell: `${n} times each part.`,
+        return { mem: { a: n, parts: ["$" + p, "$0.01"], op: "−" }, l: par(n, `$${p} − $0.01`), r: `${h(`${n} × $${p}`)} − ${h(`${n} × $0.01`)}`, tell: `${n} times each part.`,
           steps: [[`${n} × $${p} = $` + "{_}", plain(n * p)], [`${n} × $0.01 = $` + "{_}", cents.toFixed(2)], [`$${n * p} − $${cents.toFixed(2)} = $` + "{_}", t.toFixed(2)]],
           ans: "$" + t.toFixed(2) };
       },
@@ -617,22 +755,22 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
       ])
     ],
     Identity: [
-      () => { const n = pick([R(2, 99), R(100, 9999), R(11, 999) / 10]); return { l: `${fmt(n)} × ${h(1)}`, r: fmt(n), tell: "× 1 keeps the value." }; },
-      () => { const n = pick([R(2, 99), R(100, 9999), R(11, 999) / 10]); return { l: `${fmt(n)} + ${h(0)}`, r: fmt(n), tell: "+ 0 keeps the value." }; },
+      () => { const n = pick([R(2, 99), R(100, 9999), R(11, 999) / 10]); return { mem: { n: fmt(n), tok: "× 1" }, l: `${fmt(n)} × ${h(1)}`, r: fmt(n), tell: "× 1 keeps the value." }; },
+      () => { const n = pick([R(2, 99), R(100, 9999), R(11, 999) / 10]); return { mem: { n: fmt(n), tok: "+ 0" }, l: `${fmt(n)} + ${h(0)}`, r: fmt(n), tell: "+ 0 keeps the value." }; },
       () => { // equivalent fractions: × k/k is × 1 in disguise
         const d = R(2, 6), nu = R(1, d - 1), k = R(2, 5);
-        return { l: `${f(nu, d)} × ${one(f(k, k))}`, r: f(nu * k, d * k),
+        return { mem: { n: f(nu, d), tok: "×", disguise: f(k, k) }, fixedOrder: true, l: `${f(nu, d)} × ${one(f(k, k))}`, r: f(nu * k, d * k),
           tell: "Multiplying by the highlighted fraction doesn't change the value.",
           after: `${k}/${k} is just 1 in disguise, so the value stays the same. Only the form changes.`,
           steps: [[f(k, k), "1"]], side: false };
       },
       () => { // 1x = x
         const v = pick(["x", "y", "n"]);
-        return { l: `${h(1)}${v}`, r: v, tell: `The last step of solving something like 3${v} = 12: 1${v} is just ${v}.` };
+        return { mem: { n: v, tok: "1", before: true }, l: `${h(1)}${v}`, r: v, tell: `The last step of solving something like 3${v} = 12: 1${v} is just ${v}.` };
       },
       () => { // x + 0 = x
         const v = pick(["x", "y", "n"]);
-        return { l: `${v} + ${h(0)}`, r: v, tell: `The last step of solving something like ${v} + 5 = 12: ${v} + 0 is just ${v}.` };
+        return { mem: { n: v, tok: "+ 0" }, l: `${v} + ${h(0)}`, r: v, tell: `The last step of solving something like ${v} + 5 = 12: ${v} + 0 is just ${v}.` };
       },
       () => { // unit conversion: multiply by a fraction equal to 1
         const n = R(2, 9);
@@ -641,7 +779,7 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
           { big: "ft", small: "in", per: 12, what: "length" },
           { big: "hr", small: "min", per: 60, what: "time" }
         ]);
-        return { l: `${n} ${u.big} × ${oneWide(f(`${u.per} ${u.small}`, `1 ${u.big}`))}`, r: `${n * u.per} ${u.small}`,
+        return { mem: { n: `${n} ${u.big}`, tok: "×", disguise: f(`${u.per} ${u.small}`, `1 ${u.big}`) }, fixedOrder: true, l: `${n} ${u.big} × ${oneWide(f(`${u.per} ${u.small}`, `1 ${u.big}`))}`, r: `${n * u.per} ${u.small}`,
           tell: "Same amount, new units.",
           after: `${u.per} ${u.small} and 1 ${u.big} are the same ${u.what}, so that fraction equals 1. Same amount, new units.`,
           steps: [[f(`${u.per} ${u.small}`, `1 ${u.big}`), "1"]], side: false };
@@ -649,7 +787,7 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
       () => { // negative exponent: multiply by b^n / b^n
         const b = R(2, 5), n = R(2, 3);
         const pw = (e) => `${b}<sup>${e}</sup>`;
-        return { l: pw(`−${n}`), r: `${f(pw(`−${n}`), 1)} · ${one(f(pw(n), pw(n)))}`,
+        return { mem: { n: pw(`−${n}`), tok: "·", disguise: f(pw(n), pw(n)) }, fixedOrder: true, l: pw(`−${n}`), r: `${f(pw(`−${n}`), 1)} · ${one(f(pw(n), pw(n)))}`,
           tell: "The highlighted fraction is the trick that turns a negative exponent into a fraction.",
           after: `${b}${"²³"[n - 2]} over ${b}${"²³"[n - 2]} is 1 in disguise. It's the trick that turns a negative exponent into a fraction.`,
           steps: [
@@ -663,7 +801,7 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
         const gcd = (x, y) => y ? gcd(y, x % y) : x;
         const simp = (d) => { let n; do { n = R(1, d - 1); } while (gcd(n, d) !== 1); return n; };
         const a = simp(d1), c = simp(d2), D = d1 * d2, sum = a * d2 + c * d1;
-        return { custom: `<div class="stack" role="img" aria-label="${a}/${d1} times ${d2}/${d2} equals ${a * d2}/${D}, plus ${c}/${d2} times ${d1}/${d1} equals ${c * d1}/${D}">
+        return { mem: { n: f(a, d1), tok: "×", disguise: f(d2, d2) }, custom: `<div class="stack" role="img" aria-label="${a}/${d1} times ${d2}/${d2} equals ${a * d2}/${D}, plus ${c}/${d2} times ${d1}/${d1} equals ${c * d1}/${D}">
             <span class="op"></span>${f(a, d1)}<span class="op">×</span>${one(f(d2, d2))}<span class="eqs">=</span>${f(a * d2, D)}
             <span class="op">+</span>${f(c, d2)}<span class="op">×</span>${one(f(d1, d1))}<span class="eqs">=</span>${f(c * d1, D)}
           </div>`,
@@ -672,7 +810,7 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
       },
       () => { // solving an equation, stacked like on paper: x + 0 is just x
         const v = pick(["x", "y", "n"]), a = R(2, 9), b = a + R(2, 9), c = b - a;
-        return { custom: `<div class="solve" role="img" aria-label="${v} plus ${a} equals ${b}. Subtract ${a} from both sides. ${v} plus 0 equals ${c}. ${v} equals ${c}.">
+        return { mem: { n: v, tok: "+ 0" }, custom: `<div class="solve" role="img" aria-label="${v} plus ${a} equals ${b}. Subtract ${a} from both sides. ${v} plus 0 equals ${c}. ${v} equals ${c}.">
             <span class="dim">${v}</span><span class="dim">+</span><span class="dim">${a}</span><span class="eqs dim">=</span><span class="dim">${b}</span>
             <span></span><span></span><span class="sub dim">−${a}</span><span></span><span class="sub dim">−${a}</span>
             <span class="rule"></span>
@@ -684,7 +822,7 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
       },
       () => { // dividing both sides: 1x is just x
         const v = pick(["x", "y", "n"]), a = R(2, 9), x = R(3, 15), b = a * x;
-        return { custom: `<div class="solve div" role="img" aria-label="${a}${v} over ${a} equals ${b} over ${a}. 1${v} equals ${x}. ${v} equals ${x}.">
+        return { mem: { n: v, tok: "1", before: true }, custom: `<div class="solve div" role="img" aria-label="${a}${v} over ${a} equals ${b} over ${a}. 1${v} equals ${x}. ${v} equals ${x}.">
             <span class="dim">${f(`${a}${v}`, a)}</span><span class="eqs dim">=</span><span class="dim">${f(b, a)}</span>
             <span>${h(1)}${v}</span><span class="eqs">=</span><span>${x}</span>
             <span>${v}</span><span class="eqs">=</span><span>${x}</span>
@@ -704,17 +842,15 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
   GEN["Not true"] = [
     () => { // subtraction
       const b = R(2, 9), a = b + R(3, 12), d = a - b;
-      return { l: `${a} ${h("−")} ${b}`, r: `${b} ${h("−")} ${a}`,
-        tell: "Work out both sides and see if they match.",
-        after: `${a} − ${b} is ${d}, but ${b} − ${a} is −${d}. Subtraction isn't commutative.`,
-        steps: [mc(`${a} − ${b}`, `${d}`, [`−${d}`, `${a + b}`, "0"]), mc(`${b} − ${a}`, `−${d}`, [`${d}`, "0", `${a + b}`])], side: false };
+      return { mem: { a, b, op: "−" }, l: `${a} ${h("−")} ${b}`, r: `${b} ${h("−")} ${a}`,
+        tell: "They don't match. Subtraction can't swap.",
+        vals: [`${d}`, `−${d}`], steps: [], side: false };
     },
     () => { // division
       const b = R(2, 9), k = pick([2, 4, 5, 10]), a = b * k;
-      return { l: `${a} ${h("÷")} ${b}`, r: `${b} ${h("÷")} ${a}`,
-        tell: "Work out both sides and see if they match.",
-        after: `${a} ÷ ${b} is ${k}, but ${b} ÷ ${a} is 1/${k}. Division isn't commutative.`,
-        steps: [mc(`${a} ÷ ${b}`, `${k}`, [f(1, k), `${a - b}`, "0"]), mc(`${b} ÷ ${a}`, f(1, k), [`${k}`, "0", `${a - b}`])], side: false };
+      return { mem: { a, b, op: "÷" }, l: `${a} ${h("÷")} ${b}`, r: `${b} ${h("÷")} ${a}`,
+        tell: "They don't match. Division can't swap.",
+        vals: [`${k}`, f(1, k)], steps: [], side: false };
     }
   ];
   const PROPS = ["Commutative", "Associative", "Identity", "Distributive", "Not true"];
@@ -733,17 +869,106 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
     deck = shuffle(PROPS.flatMap(p => [p, p, p, p, p, p]).concat(pick(PROPS)));
     if (!deck.some((p, i) => i > 1 && p === deck[i - 1] && p === deck[i - 2])) break;
   }
+  // Problem 1 is always this mental-math trick (it uses one of the Associative slots).
+  // It asks "which is easier?" first, then the property.
+  /* Mental math intro: 18 × 9 → the 18 breaks into 2 × 9 → 2 × 9 × 9,
+     then "(2 × 9) × 9 = 2 × (9 × 9)" appears as the two choices. */
+  function mmStart(whole, m) {
+    return `<div class="mm" role="img" aria-label="${whole} × ${m}"><span class="mm-n mm-whole">${whole}</span><span class="eqs">×</span><span class="mm-n">${m}</span></div>`;
+  }
+  async function mmIntro(it) {
+    const alive = () => item === it && phase === "intro";
+    const { a, b, m, whole } = it.mm;
+    const box = $("eq").querySelector(".mm");
+    if (!box) return;
+    await wait(700); if (!alive()) return;
+    const w = box.querySelector(".mm-whole");
+    w.classList.add("mm-pulse");                      // "look at this number"
+    await wait(900); if (!alive()) return;
+    const old = w.getBoundingClientRect();
+    box.setAttribute("aria-label", `${whole} × ${m}. ${whole} breaks into ${a} × ${b}: ${a} × ${b} × ${m}`);
+    box.innerHTML = `<span class="mm-split"><span class="mm-n">${a}</span><span class="eqs">×</span><span class="mm-n">${b}</span><span class="mm-brace" aria-hidden="true"><span>${whole}</span></span></span><span class="eqs">×</span><span class="mm-n">${m}</span>`;
+    const split = box.querySelector(".mm-split"), parts = [...split.children].slice(0, 3), brace = split.querySelector(".mm-brace");
+    const rest = [...box.children].slice(1);
+    const cx = old.left + old.width / 2;
+    // everything starts where the 18 was, then spreads out (FLIP)
+    parts.forEach(n => { const r = n.getBoundingClientRect(); n.style.transform = `translateX(${cx - (r.left + r.width / 2)}px) scale(.5)`; n.style.opacity = "0"; });
+    const sp = split.getBoundingClientRect();
+    rest.forEach(n => { n.style.transform = `translateX(${old.right - sp.right}px)`; });
+    brace.style.opacity = "0";
+    reflow(box);
+    parts.concat(rest).forEach(n => { n.style.transition = "transform .7s cubic-bezier(.2,1.25,.4,1), opacity .35s"; n.style.transform = ""; n.style.opacity = ""; });
+    await wait(650); if (!alive()) return;
+    brace.style.transition = "opacity .4s"; brace.style.opacity = "";
+    await wait(900);
+  }
+  const FIRST = {
+    p: "Associative", easyFirst: true, hasSide: true, fixedOrder: true,
+    prompt: "Mental math: which would be easier?",
+    prompt2: "Which Property?",
+    custom: `<span class="side" role="img" aria-label="18 × 9: (2 × 9) × 9 or 2 × (9 × 9)">18 × 9</span>`,
+    mem: { t: [2, 9, 9], op: "×", from: 0, to: 1 }, l: "(2 × 9) × 9", r: `2 × ${h("(9 × 9)")}`,
+    easyNote: ["✓ Yes! 9 × 9 is a fact you know. Then just double it.",
+               "✕ 2 × (9 × 9) is easier: 9 × 9 is a fact you know. Then just double it."],
+    tell: "Same numbers, same order. Only the parentheses moved.",
+    after: "18 = 2 × 9, so 18 × 9 = 2 × (9 × 9) = 2 × 81 = 162.",
+    steps: [["9 × 9", "81"], ["2 × 81", "162"]], ans: "162"
+  };
+  // More problems like problem 1: split one number so a grouping makes an easy fact.
+  //   make a round number: 14 × 5 = 7 × (2 × 5) = 7 × 10
+  //   use a square fact:   16 × 8 = 2 × (8 × 8) = 2 × 64
+  const mentalUsed = new Set();
+  let mentalCount = 0;
+  const mental = () => {
+    let a, b, m, P, q;
+    if (mentalCount++ === 0) { a = 2; b = 9; m = 9; P = 81; q = "18 × 9"; } // 18 × 9 comes up every session
+    else for (let k = 0; k < 80; k++) {
+      // big enough that breaking it down actually helps (no times-table facts like 12 × 5, no round numbers like 30 × 5)
+      if (Math.random() < 0.6) {
+        [b, m] = pick([[2, 5], [2, 5], [4, 25], [2, 50]]);
+        a = m === 5 ? R(13, 24) : m === 50 ? R(7, 19) : pick([6, 7, 8, 9, 11, 13]);
+        P = b * m;
+      }
+      else { m = R(6, 9); b = m; a = R(2, 4); P = m * m; }
+      q = `${a * b} × ${m}`;
+      if (a * b >= 13 && (a * b) % 10 !== 0 && !mentalUsed.has(q)) break;
+    }
+    mentalUsed.add(q);
+    const t = a * P;
+    return { p: "Associative", easyFirst: true, hasSide: true,
+      prompt: "Mental math: which would be easier?", prompt2: "Which Property?",
+      mm: { a, b, m, whole: a * b }, fixedOrder: true,
+      custom: mmStart(a * b, m),
+      mem: { t: [a, b, m], op: "×", from: 0, to: 1 }, l: `(${a} × ${b}) × ${m}`, r: `${a} × ${h(`(${b} × ${m})`)}`,
+      easyNote: (why => [`✓ Yes! ${why}`, `✕ ${a} × (${b} × ${m}) is easier: ${why}`])(
+        b === m ? `${b} × ${m} is a fact you know.` : `${b} × ${m} makes a round number.`),
+      tell: "Same numbers, same order. Only the parentheses moved.",
+      after: `${a * b} = ${a} × ${b}, so ${q} = ${a} × (${b} × ${m}) = ${a} × ${P} = ${t}.`,
+      steps: [[`${b} × ${m}`, plain(P)], [`${a} × ${P}`, plain(t)]], ans: fmt(t) };
+  };
+  // 3 more of the Associative slots in the graded set get one of these
+  const mmSlots = new Set(shuffle(deck.map((p, i) => i).filter(i => deck[i] === "Associative")).slice(0, 4));
   let served = 0, records = [], autoShown = false, submitted = false, submittedAt = 0;
 
-  function makeItem(forced) {
-    let p, g, key;
+  // each property deals its problem types like a shuffled deck: every type comes up before any repeats
+  const typeBags = {}, seenKeys = new Set();
+  const nextType = (p) => {
+    if (!typeBags[p] || !typeBags[p].length) typeBags[p] = shuffle(GEN[p].map((_, i) => i));
+    return GEN[p][typeBags[p].pop()];
+  };
+  function makeItem(forced, mm) {
+    let p;
     do {
       p = forced || PROPS[Math.floor(Math.random() * PROPS.length)];
-      if (!forced && p === lastProp && Math.random() < 0.6) continue; // fewer back-to-back repeats
-      g = pick(GEN[p])();
+    } while (!forced && p === lastProp && Math.random() < 0.6); // fewer back-to-back repeats
+    const gen = p === "Associative" && (mm || (!forced && Math.random() < 0.5)) ? mental : nextType(p);
+    let g, key;
+    for (let tries = 0; tries < 40; tries++) { // new numbers until it's a problem we haven't had
+      g = gen();
       key = g.custom || g.l + g.r;
-      if (key !== lastKey) break;
-    } while (true);
+      if (!seenKeys.has(key) && key !== lastKey) break;
+    }
+    seenKeys.add(key);
     lastProp = p; lastKey = key;
     return { p, ...g, steps: g.steps || [], hasSide: !!g.steps && g.side !== false };
   }
@@ -767,17 +992,21 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
 
   function render() {
     served++;
-    item = makeItem(served <= GOAL ? deck[served - 1] : null);
+    item = makeItem(served <= GOAL ? deck[served - 1] : null, mmSlots.has(served - 1));
     phase = "prop";
-    const swap = Math.random() < 0.5;
-    shown = { left: swap ? item.r : item.l, right: swap ? item.l : item.r, easyIdx: item.hasSide ? (swap ? 0 : 1) : null };
+    const swap = !item.fixedOrder && Math.random() < 0.5;
+    shown = { left: swap ? item.r : item.l, right: swap ? item.l : item.r, swap, easyIdx: item.hasSide ? (swap ? 0 : 1) : null };
     drawStats();
     const e = $("eq");
     e.innerHTML = item.custom || `<span class="side">${shown.left}</span><span class="side"><span class="eqs">=</span> ${shown.right}</span>`;
-    e.classList.remove("revealed");
-    e.closest(".question").dataset.p = item.p;
+    e.classList.remove("revealed", "mm-two");
+    const qcard = e.closest(".question");
+    qcard.dataset.p = item.p;
+    qcard.querySelector(".prompt").textContent = item.prompt || "Which property? Or is it not true?";
+    $("feedback").insertBefore($("sideQ"), $("reveal")); // side question normally lives in the feedback box
     $("result").classList.remove("show");
     $("feedback").classList.remove("show");
+    $("commuteSlot").innerHTML = "";
     $("sideQ").classList.remove("show");
     $("reveal").classList.remove("show");
     const box = $("choices");
@@ -794,6 +1023,25 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
       b.addEventListener("click", () => answer(p));
       box.appendChild(b);
     });
+    if (item.easyFirst) { // ask "which is easier?" first, inside the question card
+      box.classList.add("answered");
+      qcard.appendChild($("sideQ"));
+      if (item.mm) {
+        phase = "intro";
+        qcard.querySelector(".prompt").textContent = "Mental math";
+        const it = item;
+        mmIntro(it).then(() => {
+          if (item !== it || phase !== "intro") return;
+          phase = "side";
+          qcard.querySelector(".prompt").textContent = "Which is easier?";
+          askSide();
+          $("sides").classList.add("mm-in");
+        });
+      } else {
+        phase = "side";
+        askSide();
+      }
+    }
   }
 
   function answer(p) {
@@ -819,12 +1067,24 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
     $("choices").classList.add("answered");
     $("tell").textContent = item.tell;
     fb.classList.add("show");
+    // commutative and associative problems get their memory card ("commute" / "associate")
+    showMemory({ Commutative: "comm", Associative: "assoc", Distributive: "dist", Identity: "ident", "Not true": "nope" }[item.p] || null);
 
+    if (item.easyFirst) { reveal(true); return; } // easier side was already picked
     if (shown.easyIdx === null) { reveal(false); return; }
     phase = "side";
+    askSide();
+    scrollTo(fb);
+  }
+
+  function askSide() {
     const sides = $("sides");
     sides.innerHTML = "";
+    sides.classList.toggle("with-or", !!item.easyFirst);
+    sides.classList.remove("mm-in");
+    $("sideQ").querySelector(".steps-title").hidden = !!item.easyFirst;
     [shown.left, shown.right].forEach((html, n) => {
+      if (n === 1 && item.easyFirst) sides.insertAdjacentHTML("beforeend", item.mm ? '<span class="or eq-mid">=</span>' : '<span class="or">or</span>');
       const b = document.createElement("button");
       b.className = "choice sidebtn";
       b.innerHTML = `<span>${html}</span><span class="key">${n + 1}</span>`;
@@ -832,14 +1092,13 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
       sides.appendChild(b);
     });
     $("sideQ").classList.add("show");
-    sides.firstChild.focus({ preventScroll: true });
-    scrollTo(fb);
+    if (!item.easyFirst) sides.querySelector(".sidebtn").focus({ preventScroll: true });
   }
 
   function pickSide(n) {
     if (phase !== "side") return;
     const ok = n === shown.easyIdx;
-    [...$("sides").children].forEach((b, k) => {
+    [...$("sides").querySelectorAll(".sidebtn")].forEach((b, k) => {
       b.disabled = true;
       if (k === shown.easyIdx) b.classList.add("right");
       else if (k === n) b.classList.add("wrong");
@@ -848,7 +1107,23 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
     const note = $("sidenote");
     note.hidden = false;
     note.className = "sidenote " + (ok ? "ok" : "no");
-    note.textContent = ok ? "✓ Yes, the highlighted side is easier in your head." : "✕ The highlighted side is easier in your head.";
+    note.textContent = item.easyNote ? item.easyNote[ok ? 0 : 1]
+      : ok ? "✓ Yes, the highlighted side is easier in your head." : "✕ The highlighted side is easier in your head.";
+    if (item.easyFirst) { // put the two sides together, then name the property
+      phase = "prop";
+      $("sideQ").classList.remove("show");
+      const both = `<div class="storyeq">${shown.left} <span class="eqs">=</span> ${shown.right}</div>`;
+      if (item.mm && $("eq").querySelector(".mm")) {
+        const mmBox = $("eq").querySelector(".mm"), { a, b, m, whole } = item.mm;
+        mmBox.setAttribute("aria-label", `${whole} × ${m}: (${a} × ${b}) × ${m} = ${a} × (${b} × ${m})`);
+        $("eq").insertAdjacentHTML("beforeend", both);
+        $("eq").classList.add("mm-two");
+      } else $("eq").innerHTML = both;
+      document.querySelector(".question .prompt").textContent = item.prompt2;
+      $("choices").classList.remove("answered");
+      scrollTo($("choices"));
+      return;
+    }
     $("sideQ").classList.remove("show");
     reveal(true);
   }
@@ -941,14 +1216,21 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
   }
 
   function fillSlot(k) {
+    stepDoneForMemory(k);
     document.querySelectorAll(`#eq [data-slot="${k}"]`).forEach(el => { el.innerHTML = item.steps[k][1]; el.classList.add("filled"); });
   }
 
   function finish() {
     phase = "done";
+    if (item.vals) { // Not true: each side's value right under it
+      const [vl, vr] = shown.swap ? [item.vals[1], item.vals[0]] : item.vals;
+      $("eq").innerHTML = `<span class="side nt-side"><span class="nt-expr">${shown.left}</span><span class="nt-val"><span class="eqs">=</span> ${vl}</span></span>`
+        + `<span class="nt-ne" aria-label="is not equal to">≠</span>`
+        + `<span class="side nt-side"><span class="nt-expr">${shown.right}</span><span class="nt-val"><span class="eqs">=</span> ${vr}</span></span>`;
+    }
     if (item.after) $("tell").textContent = item.after;
     if (item.steps.length && item.ans) {
-      $("eq").insertAdjacentHTML("beforeend", `<span class="side res"><span class="eqs">=</span> ${item.ans}</span>`);
+      (item.mm && $("eq").querySelector(".storyeq") || $("eq")).insertAdjacentHTML("beforeend", `<span class="side res"><span class="eqs">=</span> ${item.ans}</span>`);
     }
     const nb = $("next");
     nb.textContent = records.length === GOAL && !autoShown ? "Turn in my work" : "Next";
@@ -957,7 +1239,433 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
     scrollTo(nb);
   }
 
-  $("helpBtn").addEventListener("click", () => $("guide").showModal());
+  /* ---------- Memory cards: "Commutative = commute" and "Associative = associate" ----------
+     They use the numbers from the problem just answered (item.mem) and never show the answer:
+       mem = { t: [first, second, third], op: "+" | "×" | "" , from, to }   (from/to: which pair is grouped, associative only) */
+  function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function reflow(el) { void el.offsetWidth; }
+  const plainText = (html) => {
+    const d = document.createElement("div"); d.innerHTML = String(html);
+    d.querySelectorAll(".frac").forEach(n => { const [x, y] = n.children; n.textContent = `${x.textContent}/${y.textContent}`; });
+    return d.textContent.replace(/\s+/g, " ").trim();
+  };
+  const opHtml = (op) => op ? `<span class="cm-op">${op}</span>` : "";
+  const joinT = (t, op) => t.map(plainText).join(op ? ` ${op} ` : "");
+  const replayBtn = `<button class="cm-replay" type="button" aria-label="Watch again" title="Watch again">↻</button>`;
+
+  // Commutative: the 2nd and 3rd numbers drive past each other (start = the side shown first)
+  function makeCommute(compact, m) {
+    const t = m.t, first = m.swap ? [t[0], t[2], t[1]] : t;
+    const d = document.createElement("div");
+    d.className = "commute" + (compact ? " compact" : "");
+    d._start = [first[1], first[2]];
+    d.innerHTML = `
+      <div class="cm-word"><span class="cm-root">COMMUT</span><span class="cm-rest">ATIVE</span></div>
+      <div class="cm-road" aria-hidden="true">
+        <span class="cm-place">🏠</span>
+        <span class="cm-track"><span class="cm-car">🚗</span></span>
+        <span class="cm-place">🏢</span>
+      </div>
+      <div class="cm-stage" role="img" aria-label="${joinT(first, m.op)} becomes ${joinT([first[0], first[2], first[1]], m.op)}. The numbers trade places.">
+        <span>${first[0]}</span>${opHtml(m.op)}<span class="cm-tile" data-k="a"></span>${opHtml(m.op)}<span class="cm-tile" data-k="b"></span>
+      </div>
+      <p class="cm-cap">Numbers move.</p>${replayBtn}`;
+    d.querySelector(".cm-replay").addEventListener("click", () => playCommute(d));
+    return d;
+  }
+
+  // one trip: the two tiles trade places (one over, one under) while the car drives
+  async function commuteTrip(el, toWork, alive) {
+    const [a, b] = el.querySelectorAll(".cm-tile"), car = el.querySelector(".cm-car"), track = el.querySelector(".cm-track");
+    const A = a.getBoundingClientRect(), B = b.getBoundingClientRect();
+    const dxA = B.right - A.width - A.left, dxB = A.left - B.left; // works when the numbers have different widths
+    const hop = a.offsetHeight * 0.7;
+    const W = Math.max(0, track.clientWidth - car.offsetWidth), to = toWork ? W : 0, face = toWork ? -1 : 1;
+    const HALF = 650;
+    car.style.transition = "none";
+    car.style.transform = `translateX(${toWork ? 0 : W}px) scaleX(${face})`;
+    reflow(car);
+    car.style.transition = `transform ${2 * HALF}ms ease-in-out`;
+    car.style.transform = `translateX(${to}px) scaleX(${face})`;
+    a.style.transition = b.style.transition = `transform ${HALF}ms ease-in`;
+    a.style.transform = `translate(${dxA / 2}px, ${-hop}px)`;   // up and over
+    b.style.transform = `translate(${dxB / 2}px, ${hop}px)`;    // down and under
+    await wait(HALF); if (!alive()) return;
+    a.style.transition = b.style.transition = `transform ${HALF}ms ease-out`;
+    a.style.transform = `translate(${dxA}px, 0)`;
+    b.style.transform = `translate(${dxB}px, 0)`;
+    await wait(HALF + 60); if (!alive()) return;
+    a.style.transition = b.style.transition = "none";
+    const ha = a.innerHTML, ka = a.dataset.k;
+    a.innerHTML = b.innerHTML; a.dataset.k = b.dataset.k;
+    b.innerHTML = ha; b.dataset.k = ka;
+    a.style.transform = b.style.transform = "";
+    reflow(a);
+  }
+
+  async function playCommute(el) {
+    const run = (el._run || 0) + 1; el._run = run;
+    const alive = () => el._run === run && el.isConnected;
+    const [a, b] = el.querySelectorAll(".cm-tile"), car = el.querySelector(".cm-car");
+    [a, b, car].forEach(x => { x.style.transition = "none"; x.style.transform = ""; });
+    a.innerHTML = el._start[0]; a.dataset.k = "a";
+    b.innerHTML = el._start[1]; b.dataset.k = "b";
+    car.style.transform = "translateX(0px) scaleX(-1)";
+    await wait(800); if (!alive()) return;
+    await commuteTrip(el, true, alive); if (!alive()) return;
+    await wait(1700); if (!alive()) return;
+    await commuteTrip(el, false, alive); if (!alive()) return;
+    await wait(1300); if (!alive()) return;
+    await commuteTrip(el, true, alive);
+  }
+
+  // Associative: the numbers stay still, the parentheses (a friend-group hug) slide to the other pair
+  const PAREN_L = '<svg viewBox="0 0 10 40" preserveAspectRatio="none" aria-hidden="true"><path d="M8.5 2 Q0.5 20 8.5 38" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>';
+  const PAREN_R = '<svg viewBox="0 0 10 40" preserveAspectRatio="none" aria-hidden="true"><path d="M1.5 2 Q9.5 20 1.5 38" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>';
+  function makeAssoc(compact, m) {
+    const t = m.t, op = m.op || "×";
+    const g0 = m.swap ? m.to : m.from, g1 = m.swap ? m.from : m.to;
+    const grouped = (g) => { const p = t.map(plainText); p[g] = "(" + p[g]; p[g + 1] += ")"; return p.join(` ${op} `); };
+    const d = document.createElement("div");
+    d.className = "commute assoc" + (compact ? " compact" : "");
+    d._g0 = g0; d._g1 = g1;
+    d.innerHTML = `
+      <div class="cm-word"><span class="cm-root">ASSOCIAT</span><span class="cm-rest">IVE</span> <span class="cm-emoji">👫</span></div>
+      <div class="as-stage" role="img" aria-label="${grouped(g0)} becomes ${grouped(g1)}. The numbers stay put and the parentheses move.">
+        <span class="as-bub"></span><span class="as-p">${PAREN_L}</span><span class="as-p">${PAREN_R}</span>
+        <span class="as-n">${t[0]}</span>${opHtml(op)}<span class="as-n">${t[1]}</span>${opHtml(op)}<span class="as-n">${t[2]}</span>
+      </div>
+      <p class="cm-cap">Parentheses move.</p>${replayBtn}`;
+    d.querySelector(".cm-replay").addEventListener("click", () => playAssoc(d));
+    return d;
+  }
+  // where the digits really are, top to bottom, inside a number's box (measured in the font on this screen)
+  let measureCtx = null;
+  function digitBand(numEl, box) {
+    try {
+      measureCtx = measureCtx || document.createElement("canvas").getContext("2d");
+      const cs = getComputedStyle(numEl);
+      measureCtx.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      const mt = measureCtx.measureText("0123456789");
+      const fA = mt.fontBoundingBoxAscent, fD = mt.fontBoundingBoxDescent;
+      if (fA > 0 && mt.actualBoundingBoxAscent > 0) {
+        const baseline = box.top + (box.height - (fA + fD)) / 2 + fA;
+        return { top: baseline - mt.actualBoundingBoxAscent, bottom: baseline + Math.max(0, mt.actualBoundingBoxDescent) };
+      }
+    } catch (e) {}
+    const mid = box.top + box.height / 2, h = box.height * 0.62; // fallback guess
+    return { top: mid - h / 2, bottom: mid + h / 2 };
+  }
+  // g = 0: (first second) third     g = 1: first (second third)
+  function groupAssoc(el, g, animate) {
+    const st = el.querySelector(".as-stage"), S = st.getBoundingClientRect();
+    if (!S.width) return;
+    const numEls = [...st.querySelectorAll(".as-n")], nums = numEls.map(n => n.getBoundingClientRect());
+    const [pl, pr] = st.querySelectorAll(".as-p"), bub = st.querySelector(".as-bub");
+    const L = nums[g], R = nums[g + 1];
+    st.classList.toggle("as-moving", !!animate);
+    if (!animate) reflow(st);
+    // center on the digits of a plain number (fractions are taller, so the parentheses grow to fit them)
+    let k = numEls.findIndex(n => !n.querySelector(".frac")); if (k < 0) k = g;
+    const band = digitBand(numEls[k], nums[k]), dh = band.bottom - band.top, mid = (band.top + band.bottom) / 2 - S.top;
+    const fracH = Math.max(0, ...[g, g + 1].filter(i => numEls[i].querySelector(".frac")).map(i => nums[i].height));
+    const ph = Math.max(dh * 1.45, fracH * 1.1), pw = Math.min(ph, dh * 1.45) * 0.28, gap = dh * 0.12;
+    pl.style.width = pr.style.width = pw + "px";
+    pl.style.height = pr.style.height = ph + "px";
+    pl.style.top = pr.style.top = (mid - ph / 2) + "px";
+    const bh = ph + dh * 0.5, bpad = dh * 0.38;
+    bub.style.top = (mid - bh / 2) + "px";
+    bub.style.height = bh + "px";
+    pl.style.left = (L.left - S.left - pw - gap) + "px";
+    pr.style.left = (R.right - S.left + gap) + "px";
+    bub.style.left = (L.left - S.left - pw - gap - bpad) + "px";
+    bub.style.width = (R.right - L.left + 2 * (pw + gap + bpad)) + "px";
+    el._g = g;
+  }
+  async function playAssoc(el) {
+    const run = (el._run || 0) + 1; el._run = run;
+    const alive = () => el._run === run && el.isConnected;
+    groupAssoc(el, el._g0, false);
+    await wait(1300); if (!alive()) return;
+    groupAssoc(el, el._g1, true);
+    await wait(2200); if (!alive()) return;
+    groupAssoc(el, el._g0, true);
+    await wait(1800); if (!alive()) return;
+    groupAssoc(el, el._g1, true);
+  }
+  addEventListener("resize", () => document.querySelectorAll(".commute.assoc").forEach(el => groupAssoc(el, el._g ?? el._g0, false)));
+
+  /* Distributive: a(B op k) ⇄ a × B op a × k. The outside number is the mail carrier:
+     arrows show where it goes, then a copy lands at each part. Factoring plays the other way. */
+  // "a 5", "an 8", "an 11", "an 18"
+  const anA = (n) => { const t = plainText(n); return /^8/.test(t) || /^1[18]$/.test(t) ? "an" : "a"; };
+  function makeDist(compact, m) {
+    const d = document.createElement("div");
+    d.className = "commute dist" + (compact ? " compact" : "");
+    d._m = m;
+    d._start = (!!m.factor !== !!m.swap) ? "E" : "P";
+    const pt = (k) => plainText(k);
+    const P = `${pt(m.a)}${m.cross ? " × " : ""}(${pt(m.parts[0])} ${m.op} ${pt(m.parts[1])})`;
+    const E = `${pt(m.a)} × ${pt(m.parts[0])} ${m.op} ${pt(m.a)} × ${pt(m.parts[1])}`;
+    const [from, to] = d._start === "P" ? [P, E] : [E, P];
+    d.innerHTML = `
+      <div class="cm-word"><span class="cm-root">DISTRIBUT</span><span class="cm-rest">IVE</span> <span class="cm-emoji">📬</span></div>
+      <div class="ds-stage" role="img" aria-label="${from} becomes ${to}. The outside number goes to each part."></div>
+      <p class="cm-cap">Everyone gets ${anA(m.a)} ${plainText(m.a)}.</p>${replayBtn}`;
+    d.querySelector(".cm-replay").addEventListener("click", () => playDist(d));
+    return d;
+  }
+  function dsKeys(m, layout) {
+    return layout === "P"
+      ? ["a", ...(m.cross ? ["x0"] : []), "lp", "B", "op", "k", "rp"]
+      : ["a1", "x1", "B", "op", "a2", "x2", "k"];
+  }
+  function dsText(m, key) {
+    return { a: m.a, a1: m.a, a2: m.a, B: m.parts[0], k: m.parts[1], op: m.op, x0: "×", x1: "×", x2: "×", lp: "(", rp: ")" }[key];
+  }
+  // draw a layout; when animating, every piece slides from where it was (FLIP), copies come from the carrier
+  function dsRender(el, layout, animate) {
+    const m = el._m, st = el.querySelector(".ds-stage");
+    const old = {};
+    if (animate) st.querySelectorAll("[data-key]").forEach(n => { old[n.dataset.key] = n.getBoundingClientRect(); });
+    st.innerHTML = dsKeys(m, layout).map(k => {
+      const cls = /^a/.test(k) ? "copy" : /^(x|lp|rp|op)/.test(k) ? "sym" : "";
+      return `<span class="k ${cls}" data-key="${k}">${dsText(m, k)}</span>`;
+    }).join("");
+    el._layout = layout;
+    if (!animate) return;
+    const S = st.getBoundingClientRect(), moves = [];
+    st.querySelectorAll("[data-key]").forEach(n => {
+      const k = n.dataset.key, r = n.getBoundingClientRect();
+      const src = old[k] || ((k === "a1" || k === "a2") && old.a) || (k === "a" && old.a1);
+      if (src) {
+        n.style.transform = `translate(${src.left - r.left}px, ${src.top - r.top}px)`;
+        moves.push([n, k === "a2" ? 260 : 0]);
+      } else { n.style.opacity = "0"; moves.push([n, -1]); }
+    });
+    if (layout === "P" && old.a2) { // the second copy flies back into the carrier too
+      const a = st.querySelector('[data-key="a"]').getBoundingClientRect(), g = document.createElement("span");
+      g.className = "ds-ghost"; g.innerHTML = dsText(m, "a2");
+      g.style.left = (old.a2.left - S.left) + "px"; g.style.top = (old.a2.top - S.top) + "px";
+      st.appendChild(g);
+      moves.push([g, 0, `translate(${a.left - old.a2.left}px, ${a.top - old.a2.top}px)`]);
+      setTimeout(() => g.remove(), 900);
+    }
+    reflow(st);
+    moves.forEach(([n, delay, end]) => {
+      if (delay < 0) { n.style.transition = "opacity .4s ease .45s"; n.style.opacity = "1"; return; }
+      n.style.transition = `transform .75s ease-in-out ${delay}ms`;
+      n.style.transform = end || "";
+    });
+  }
+  // the "rainbow arrows" from the carrier to each part
+  async function dsArrows(el, alive) {
+    const st = el.querySelector(".ds-stage"), S = st.getBoundingClientRect();
+    const get = (k) => st.querySelector(`[data-key="${k}"]`).getBoundingClientRect();
+    const a = get("a"), NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "ds-arrows"); svg.setAttribute("aria-hidden", "true");
+    st.appendChild(svg);
+    for (const k of ["B", "k"]) {
+      const t = get(k);
+      const x1 = a.left + a.width / 2 - S.left, y1 = a.top - S.top + a.height * 0.12;
+      const x2 = t.left + t.width / 2 - S.left, y2 = t.top - S.top + t.height * 0.08;
+      const cx = (x1 + x2) / 2, cy = Math.min(y1, y2) - a.height * (k === "B" ? 0.75 : 1.05);
+      const path = document.createElementNS(NS, "path");
+      path.setAttribute("d", `M${x1} ${y1} Q${cx} ${cy} ${x2} ${y2}`);
+      svg.appendChild(path);
+      const ang = Math.atan2(y2 - cy, x2 - cx), z = a.height * 0.22;
+      const pts = [[x2, y2], [x2 - z * Math.cos(ang - 0.5), y2 - z * Math.sin(ang - 0.5)], [x2 - z * Math.cos(ang + 0.5), y2 - z * Math.sin(ang + 0.5)]];
+      const head = document.createElementNS(NS, "polygon");
+      head.setAttribute("points", pts.map(p => p.join(",")).join(" "));
+      svg.appendChild(head);
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
+      reflow(st);
+      path.style.transition = "stroke-dashoffset .6s ease-in-out";
+      path.style.strokeDashoffset = "0";
+      await wait(600); if (!alive()) return;
+      head.classList.add("on");
+      await wait(150); if (!alive()) return;
+    }
+  }
+  async function playDist(el) {
+    const run = (el._run || 0) + 1; el._run = run;
+    const alive = () => el._run === run && el.isConnected;
+    const start = el._start, other = start === "P" ? "E" : "P";
+    const go = async (layout) => {
+      if (layout === "E") { await dsArrows(el, alive); if (!alive()) return; await wait(350); if (!alive()) return; }
+      dsRender(el, layout, true);
+    };
+    dsRender(el, start, false);
+    await wait(900); if (!alive()) return;
+    await go(other); if (!alive()) return;
+    await wait(2200); if (!alive()) return;
+    await go(start); if (!alive()) return;
+    await wait(1800); if (!alive()) return;
+    await go(other);
+  }
+
+  /* Identity: the number is on an ID card. × 1 or + 0 bumps it, and the card stays the same.
+     A "1 in disguise" (3/3, 100 cm / 1 m …) wears 🥸; it only comes off after the student
+     has answered that step, so the card never gives an answer away. */
+  function makeIdent(compact, m) {
+    const d = document.createElement("div");
+    d.className = "commute ident" + (compact ? " compact" : "");
+    d._m = m; d._unmasked = !!m.unmasked;
+    const val = m.disguise
+      ? `<span class="id-val">${d._unmasked ? "1" : m.disguise}${d._unmasked ? "" : '<span class="id-mask" aria-hidden="true">🥸</span>'}</span>`
+      : "";
+    const tok = `<span class="id-tok${d._unmasked ? " unmasked" : ""}">${m.tok}${val}</span>`;
+    const card = `<span class="id-card"><span class="id-chip">ID</span><span class="id-n">${m.n}</span></span>`;
+    const label = m.disguise ? `${plainText(m.n)} ${m.tok} ${plainText(m.disguise)}, which is 1 in disguise. The value doesn't change.`
+                             : `${m.before ? m.tok + plainText(m.n) : plainText(m.n) + " " + m.tok}. The value doesn't change.`;
+    d.innerHTML = `
+      <div class="cm-word"><span class="cm-root">ID</span><span class="cm-rest">ENTITY</span> <span class="cm-emoji">🪪</span></div>
+      <div class="id-stage" role="img" aria-label="${label}">${m.before ? tok + card : card + tok}</div>
+      <p class="cm-cap">Still you.</p>${replayBtn}`;
+    d.querySelector(".cm-replay").addEventListener("click", () => playIdent(d));
+    return d;
+  }
+  async function bumpIdent(el) {
+    const tok = el.querySelector(".id-tok"), card = el.querySelector(".id-card");
+    if (!tok || !card) return;
+    const T = tok.getBoundingClientRect(), C = card.getBoundingClientRect();
+    const dx = el._m.before ? (C.left - T.right + 3) : (C.right - T.left - 3);
+    tok.style.transition = "transform .35s ease-in";
+    tok.style.transform = `translateX(${dx}px)`;
+    await wait(350);
+    card.classList.remove("wiggle"); reflow(card); card.classList.add("wiggle");
+    tok.style.transition = "transform .5s ease-out";
+    tok.style.transform = "";
+    await wait(550);
+  }
+  async function unmaskIdent(el) {
+    if (el._unmasked || !el._m.disguise) return;
+    el._unmasked = true;
+    const tok = el.querySelector(".id-tok"), val = el.querySelector(".id-val");
+    tok.classList.add("unmasked");
+    await wait(500);
+    val.innerHTML = "1";
+    val.classList.add("id-pop");
+  }
+  async function playIdent(el) {
+    const run = (el._run || 0) + 1; el._run = run;
+    const alive = () => el._run === run && el.isConnected;
+    await wait(700); if (!alive()) return;
+    await bumpIdent(el); if (!alive()) return;
+    await wait(1300); if (!alive()) return;
+    await bumpIdent(el); if (!alive()) return;
+    if (el._m.disguise && el._m.revealNow && !el._unmasked) {
+      await wait(600); if (!alive()) return;
+      await unmaskIdent(el); if (!alive()) return;
+      await wait(700); if (!alive()) return;
+      await bumpIdent(el);
+    }
+  }
+  // the student just answered "3/3 = 1" (always the first step): take the disguise off
+  function stepDoneForMemory(k) {
+    if (k !== 0 || !item || !item.mem || !item.mem.disguise) return;
+    item._unmaskOK = true;
+    const c = document.querySelector("#commuteSlot .commute.ident");
+    if (c && !c._unmasked) { c._run = (c._run || 0) + 1; unmaskIdent(c).then(() => wait(600)).then(() => bumpIdent(c)); }
+  }
+
+  /* Not true: same tiles and road as the commute, but − or ÷ is a roadblock.
+     The swap starts, crashes in the middle and bounces back. No values are shown. */
+  function makeNope(compact, m) {
+    const first = m.swap ? [m.b, m.a] : [m.a, m.b];
+    const name = m.op === "÷" ? "Division" : "Subtraction";
+    const d = document.createElement("div");
+    d.className = "commute nope" + (compact ? " compact" : "");
+    d.innerHTML = `
+      <div class="cm-word"><span class="cm-root">NOT</span><span class="cm-rest"> TRUE</span> <span class="cm-emoji">🚧</span></div>
+      <div class="cm-road" aria-hidden="true">
+        <span class="cm-place">🏠</span>
+        <span class="cm-track"><span class="nt-block">🚧</span><span class="cm-car">🚗</span></span>
+        <span class="cm-place">🏢</span>
+      </div>
+      <div class="cm-stage" role="img" aria-label="${first[0]} ${m.op} ${first[1]}: the numbers try to trade places but crash. ${name} can't swap.">
+        <span class="cm-tile" data-k="a">${first[0]}</span><span class="cm-op nt-op">${m.op}</span><span class="cm-tile" data-k="b">${first[1]}</span>
+        <span class="nt-boom" aria-hidden="true">💥</span>
+      </div>
+      <p class="cm-cap">${name} can't swap.</p>${replayBtn}`;
+    d.querySelector(".cm-replay").addEventListener("click", () => playNope(d));
+    return d;
+  }
+  async function nopeTry(el, alive) {
+    const [a, b] = el.querySelectorAll(".cm-tile"), car = el.querySelector(".cm-car"), track = el.querySelector(".cm-track");
+    const block = el.querySelector(".nt-block"), op = el.querySelector(".nt-op"), boom = el.querySelector(".nt-boom");
+    const A = a.getBoundingClientRect(), B = b.getBoundingClientRect(), O = op.getBoundingClientRect();
+    const hop = a.offsetHeight * 0.45, S = el.querySelector(".cm-stage").getBoundingClientRect();
+    boom.style.left = (O.left + O.width / 2 - S.left) + "px";
+    const stop = Math.max(0, track.clientWidth / 2 - block.offsetWidth / 2 - car.offsetWidth + 4); // car front meets the 🚧
+    // drive toward each other
+    car.style.transition = "transform .6s ease-in";
+    car.style.transform = `translateX(${stop}px) scaleX(-1)`;
+    a.style.transition = b.style.transition = "transform .6s ease-in";
+    a.style.transform = `translate(${O.left - A.right + 2}px, ${-hop}px)`;
+    b.style.transform = `translate(${O.right - B.left - 2}px, ${hop}px)`;
+    await wait(600); if (!alive()) return;
+    // crash
+    op.classList.remove("crash"); reflow(op); op.classList.add("crash");
+    boom.classList.add("show");
+    await wait(250); if (!alive()) return;
+    // bounce back to where they started
+    car.style.transition = a.style.transition = b.style.transition = "transform .55s cubic-bezier(.2,1.4,.4,1)";
+    car.style.transform = "translateX(0px) scaleX(-1)";
+    a.style.transform = b.style.transform = "";
+    await wait(300); boom.classList.remove("show");
+    await wait(300);
+  }
+  async function playNope(el) {
+    const run = (el._run || 0) + 1; el._run = run;
+    const alive = () => el._run === run && el.isConnected;
+    el.querySelectorAll(".cm-tile, .cm-car").forEach(x => { x.style.transition = "none"; x.style.transform = ""; });
+    el.querySelector(".cm-car").style.transform = "translateX(0px) scaleX(-1)";
+    el.querySelector(".nt-boom").classList.remove("show");
+    await wait(800); if (!alive()) return;
+    await nopeTry(el, alive); if (!alive()) return;
+    await wait(1100); if (!alive()) return;
+    await nopeTry(el, alive);
+  }
+
+  // in the feedback box: each card plays by itself the first 3 times, then it's one tap away
+  const MEM = {
+    comm: { make: makeCommute, play: playCommute, shows: 0, label: "🚗 Commutative = commute" },
+    assoc: { make: makeAssoc, play: playAssoc, shows: 0, label: "👫 Associative = associate" },
+    dist: { make: makeDist, play: playDist, shows: 0, label: "📬 Distributive = distribute" },
+    ident: { make: makeIdent, play: playIdent, shows: 0, label: "🪪 Identity = your ID" },
+    nope: { make: makeNope, play: playNope, shows: 0, label: "🚧 Not true" }
+  };
+  function showMemory(kind) {
+    const slot = $("commuteSlot");
+    slot.innerHTML = "";
+    const m = MEM[kind];
+    if (!m || !item.mem) return;
+    m.shows++;
+    const nums = { ...item.mem, swap: !!(shown && shown.swap && !item.custom),
+      cross: / × \(/.test(String(item.l) + String(item.r)),
+      revealNow: !item.steps.length, unmasked: !!item._unmaskOK };
+    const open = () => { slot.innerHTML = ""; const c = m.make(true, nums); slot.appendChild(c); requestAnimationFrame(() => m.play(c)); };
+    open(); return; // always plays by itself
+    const btn = document.createElement("button");
+    btn.className = "cm-open"; btn.type = "button";
+    btn.style.setProperty("--c", { comm: "var(--c-comm)", assoc: "var(--c-assoc)", dist: "var(--c-dist)", ident: "var(--c-iden)" }[kind]);
+    btn.textContent = m.label;
+    btn.addEventListener("click", open);
+    slot.appendChild(btn);
+  }
+
+  // Help shows the same two cards with simple example numbers
+  const guideCommute = makeCommute(true, { t: [12, 5, 8], op: "+" });
+  const guideAssoc = makeAssoc(true, { t: [17, 6, 4], op: "+", from: 0, to: 1 });
+  const guideDist = makeDist(true, { a: 3, parts: [20, 4], op: "+" });
+  const guideIdent = makeIdent(true, { n: f(2, 5), tok: "×", disguise: f(3, 3), revealNow: true });
+  const guideNope = makeNope(true, { a: 10, b: 3, op: "−" });
+  $("guideCommute").append(guideCommute, guideAssoc, guideDist, guideIdent, guideNope);
+
+  $("helpBtn").addEventListener("click", () => { $("guide").showModal(); requestAnimationFrame(() => { playCommute(guideCommute); playAssoc(guideAssoc); playDist(guideDist); playIdent(guideIdent); playNope(guideNope); }); });
   $("guideClose").addEventListener("click", () => $("guide").close());
   $("guide").addEventListener("click", (e) => { if (e.target === $("guide")) $("guide").close(); });
 
@@ -976,6 +1684,7 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
   document.addEventListener("keydown", (e) => {
     if (turninOpen() || $("guide").open) return;
     if (e.target.classList && e.target.classList.contains("blank")) return;
+    if (e.target.closest && e.target.closest(".commute, .cm-open")) return;
     if (phase === "prop" && /^[1-5]$/.test(e.key)) { answer(PROPS[+e.key - 1]); e.preventDefault(); }
     else if (phase === "side" && /^[12]$/.test(e.key)) { pickSide(+e.key - 1); e.preventDefault(); }
     else if (phase === "steps" && /^[1-4]$/.test(e.key)) {
@@ -1011,13 +1720,10 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
     const done = records.length, right = rightCount();
     if (done >= GOAL) {
       $("ti-title").textContent = done > GOAL ? `${done} problems done` : `All ${GOAL} done`;
-      $("ti-sub").textContent = "Enter your period and name to turn in your work. After that you can keep practicing as long as you like.";
       $("ti-after-lab").textContent = "Want more practice?";
       $("ti-back").textContent = "Keep practicing";
     } else {
-      $("ti-title").textContent = "Turn in your work so far";
-      $("ti-sub").textContent = `You have finished ${done} of ${GOAL}. Enter your period and name to turn in what you have. `
-        + "Nothing is lost \u2014 you can go back, keep working, and send it again. The newer one counts.";
+      $("ti-title").textContent = "Turn in";
       $("ti-after-lab").textContent = "Not done yet?";
       $("ti-back").textContent = "Go back and keep working";
     }
