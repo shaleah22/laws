@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Name That Property · 31 problems</title>
+<title>Name That Property · 30 right</title>
 <style>
 :root {
   --bg: #F6F5F2;
@@ -341,7 +341,8 @@ dialog.guide .gcard { background: var(--bg); padding: .7rem .9rem; }
 @media (max-width: 540px) { dialog.guide .guide-grid { grid-template-columns: 1fr; } h1 { font-size: 1rem; } .count { font-size: .8rem; } .hright { gap: .5rem; } .helpbtn:not(.round) { padding: .25rem .7rem; } }
 @media (prefers-reduced-motion: reduce) { .hl, .choice { transition: none; } }
 
-/* ---------- 31-problem set + turn in ---------- */
+/* ---------- 30-right set + turn in ---------- */
+.redo { margin: 0 0 .45rem; font-size: .95rem; font-weight: 600; color: var(--wrong); line-height: 1.4; }
 .dots { gap: 3px; }
 .dots span { border-radius: 3px; }
 .dots.extra { gap: 6px; }
@@ -504,7 +505,7 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
 <body>
 <main>
   <header>
-    <h1 id="title">Problem 1 of 31</h1>
+    <h1 id="title">0 of 30 right</h1>
     <div class="hright">
       <div class="count" aria-live="polite">Score <strong id="score">0/0</strong><span id="streakBox"> &nbsp; Streak <strong id="streak">0</strong></span></div>
       <button class="helpbtn turnbtn" id="turninBtn" type="button">Turn in</button>
@@ -524,6 +525,7 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
 
     <div class="feedback" id="feedback" aria-live="polite">
       <div class="fb-head"><p class="verdict" id="verdict"></p><button class="btn" id="next" hidden>Next</button></div>
+      <p class="redo" id="redo" hidden></p>
       <p class="tell" id="tell"></p>
       <div id="commuteSlot"></div>
       <div id="sideQ">
@@ -553,10 +555,11 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   </dialog>
 </main>
 
-<!-- the turn-in page: after problem 31, or any time from the Turn in button -->
+<!-- the turn-in page: after the 30th right answer, or any time from the Turn in button -->
 <div class="turnin off" id="turnin" role="dialog" aria-labelledby="ti-title">
   <div class="ti-inner">
-    <h2 id="ti-title">All 31 done</h2>
+    <h2 id="ti-title">All 30 right</h2>
+    <p class="ti-sub" id="ti-sub"></p>
 
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none"
             onload="if(window.onHiddenFrameLoad)onHiddenFrameLoad()"></iframe>
@@ -858,15 +861,18 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   let item = null, shown = null, phase = "prop", lastProp = null, lastKey = "";
   let score = 0, total = 0, streak = 0, history = [];
 
-  /* ---------- the 31 graded problems ----------
-     Each property comes up 6 times, plus one more picked at random (31),
+  /* ---------- 30 right answers to finish ----------
+     The queue starts with each property 6 times (30),
      shuffled so no property shows up three times in a row.
-     After the 31st: turn-in page, then open-ended random practice. */
-  const GOAL = 31, DRILL_NAME = "Name That Property";
+     The property has to be right on the first click. A miss doesn't count:
+     that property goes back into the queue and comes up again later.
+     (Mistakes on the adding/multiplying steps are fine and don't affect this.)
+     After the 30th right answer: turn-in page, then open-ended random practice. */
+  const GOAL = 30, DRILL_NAME = "Name That Property";
   const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   let deck;
   for (let tries = 0; tries < 500; tries++) {
-    deck = shuffle(PROPS.flatMap(p => [p, p, p, p, p, p]).concat(pick(PROPS)));
+    deck = shuffle(PROPS.flatMap(p => [p, p, p, p, p, p]));
     if (!deck.some((p, i) => i > 1 && p === deck[i - 1] && p === deck[i - 2])) break;
   }
   // Problem 1 is always this mental-math trick (it uses one of the Associative slots).
@@ -948,7 +954,19 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   };
   // 3 more of the Associative slots in the graded set get one of these
   const mmSlots = new Set(shuffle(deck.map((p, i) => i).filter(i => deck[i] === "Associative")).slice(0, 4));
-  let served = 0, records = [], autoShown = false, submitted = false, submittedAt = 0;
+  const queue = deck.map((p, i) => ({ p, mm: mmSlots.has(i) }));
+  // a missed problem goes back in a few problems later (sooner near the end), never a third in a row
+  function requeue(slot) {
+    const hi = queue.length, lo = Math.min(hi, 3);
+    const triple = (q) => { const seq = [item.p, ...q.map(x => x.p)]; return seq.some((p, i) => i > 1 && p === seq[i - 1] && p === seq[i - 2]); };
+    for (let k = 0; k < 60; k++) {
+      const i = R(lo, hi), q = queue.slice(); q.splice(i, 0, slot);
+      if (!triple(q)) { queue.splice(i, 0, slot); return; }
+    }
+    queue.push(slot);
+  }
+  let served = 0, records = [], autoShown = false, submitted = false, submittedAt = 0, submittedRight = 0;
+  const gradedRight = () => records.filter(r => r.ok && r.graded).length;
 
   // each property deals its problem types like a shuffled deck: every type comes up before any repeats
   const typeBags = {}, seenKeys = new Set();
@@ -976,15 +994,20 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   function drawStats() {
     $("score").textContent = `${score}/${total}`;
     $("streak").textContent = streak;
-    const graded = served <= GOAL;
-    $("title").textContent = graded ? `Problem ${served} of ${GOAL}` : `Problem ${served} · extra practice`;
-    const size = graded ? GOAL : 12;
-    const recent = graded ? history.slice(0, GOAL) : history.slice(-12);
-    const cur = graded ? served - 1 : recent.length;
+    const graded = !item || item.graded;
     const cells = [];
-    for (let n = 0; n < size; n++) {
-      const r = recent[n];
-      cells.push(`<span class="${r === true ? "ok" : r === false ? "no" : n === cur ? "now" : ""}"></span>`);
+    if (graded) { // one cell per right answer; a miss flashes red on the current cell but doesn't fill it
+      const prog = gradedRight(), res = item ? item.result : undefined;
+      $("title").textContent = `${prog} of ${GOAL} right`;
+      for (let n = 0; n < GOAL; n++)
+        cells.push(`<span class="${n < prog ? "ok" : n === prog && res === false ? "no" : n === prog && res === undefined ? "now" : ""}"></span>`);
+    } else {
+      $("title").textContent = "Extra practice";
+      const recent = history.slice(-12);
+      for (let n = 0; n < 12; n++) {
+        const r = recent[n];
+        cells.push(`<span class="${r === true ? "ok" : r === false ? "no" : n === recent.length ? "now" : ""}"></span>`);
+      }
     }
     $("dots").innerHTML = cells.join("");
     $("dots").classList.toggle("extra", !graded);
@@ -992,7 +1015,10 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
 
   function render() {
     served++;
-    item = makeItem(served <= GOAL ? deck[served - 1] : null, mmSlots.has(served - 1));
+    const slot = queue.length ? queue.shift() : null;
+    item = makeItem(slot ? slot.p : null, slot ? slot.mm : false);
+    item.graded = !!slot; item.slot = slot;
+    $("redo").hidden = true;
     phase = "prop";
     const swap = !item.fixedOrder && Math.random() < 0.5;
     shown = { left: swap ? item.r : item.l, right: swap ? item.l : item.r, swap, easyIdx: item.hasSide ? (swap ? 0 : 1) : null };
@@ -1050,7 +1076,11 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     total++;
     if (ok) { score++; streak++; } else streak = 0;
     history.push(ok);
-    records.push({ q: eqText(), pick: p, p: item.p, ok });
+    item.result = ok;
+    records.push({ q: eqText(), pick: p, p: item.p, ok, graded: item.graded });
+    if (!ok && item.graded) requeue(item.slot);
+    $("redo").hidden = ok || !item.graded;
+    $("redo").textContent = "This one doesn't count toward your 30. You'll get another one like it later.";
     drawStats();
     $("eq").classList.add("revealed");
     document.querySelectorAll("#choices .choice").forEach(b => {
@@ -1070,6 +1100,12 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     // commutative and associative problems get their memory card ("commute" / "associate")
     showMemory({ Commutative: "comm", Associative: "assoc", Distributive: "dist", Identity: "ident", "Not true": "nope" }[item.p] || null);
 
+    if (!ok) { // wrong property: no working it out, straight on to the next problem
+      $("sideQ").classList.remove("show");
+      $("reveal").classList.remove("show");
+      finish();
+      return;
+    }
     if (item.easyFirst) { reveal(true); return; } // easier side was already picked
     if (shown.easyIdx === null) { reveal(false); return; }
     phase = "side";
@@ -1233,7 +1269,7 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
       (item.mm && $("eq").querySelector(".storyeq") || $("eq")).insertAdjacentHTML("beforeend", `<span class="side res"><span class="eqs">=</span> ${item.ans}</span>`);
     }
     const nb = $("next");
-    nb.textContent = records.length === GOAL && !autoShown ? "Turn in my work" : "Next";
+    nb.textContent = item.graded && gradedRight() >= GOAL && !autoShown ? "Turn in my work" : "Next";
     nb.hidden = false;
     nb.focus({ preventScroll: true });
     scrollTo(nb);
@@ -1675,7 +1711,7 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
 
   function next() {
     if (phase !== "done") return;
-    if (records.length >= GOAL && !autoShown) { autoShown = true; showTurnIn(); return; }
+    if (gradedRight() >= GOAL && !autoShown) { autoShown = true; showTurnIn(); return; }
     render();
     window.scrollTo({ top: 0, behavior: "auto" });
   }
@@ -1717,9 +1753,12 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   function turninOpen() { return !$("turnin").classList.contains("off"); }
 
   function showTurnIn() {
-    const done = records.length, right = rightCount();
-    if (done >= GOAL) {
-      $("ti-title").textContent = done > GOAL ? `${done} problems done` : `All ${GOAL} done`;
+    const done = records.length, right = rightCount(), prog = gradedRight();
+    $("ti-sub").textContent = prog >= GOAL
+      ? `You got ${GOAL} right${done > right ? ` (${done} tries)` : ""}. Turn it in below.`
+      : `${prog} of ${GOAL} right so far. Missed ones don't count, so keep going until you have ${GOAL}.`;
+    if (prog >= GOAL) {
+      $("ti-title").textContent = `All ${GOAL} right`;
       $("ti-after-lab").textContent = "Want more practice?";
       $("ti-back").textContent = "Keep practicing";
     } else {
@@ -1743,13 +1782,13 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     const more = submitted && done > submittedAt;
     $("gform").classList.toggle("off", submitted && !more);
     if (more) {
-      $("ti-feedback").innerHTML = `<span class="note">You turned in ${submittedAt} \u2014 you have ${done} now. Send it again and the newer one counts.</span>`;
+      $("ti-feedback").innerHTML = `<span class="note">You turned in with ${submittedRight} of ${GOAL} right \u2014 you have ${prog} now. Send it again and the newer one counts.</span>`;
       $("ti-submit").textContent = "Send updated results";
     } else if (!submitted) {
       $("ti-feedback").innerHTML = "";
       $("ti-submit").textContent = "Submit Results";
     }
-    $("formScore").value = done;
+    $("formScore").value = prog;
     $("turnin").classList.remove("off");
     $("turnin").scrollTop = 0;
     if (!submitted || more) setTimeout(() => $(submitted ? "ti-submit" : "studentPeriod").focus(), 50);
@@ -1758,8 +1797,9 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   // back to the drill: an answered problem moves on, an unanswered one stays put
   function backToPractice() {
     $("turnin").classList.add("off");
-    if (phase === "done" && (records.length !== GOAL || autoShown)) {
-      if (records.length >= GOAL) autoShown = true;
+    const justFinished = item.graded && gradedRight() >= GOAL && !autoShown;
+    if (phase === "done" && !justFinished) {
+      if (gradedRight() >= GOAL) autoShown = true;
       render();
     } else if (phase === "done") { $("next").focus({ preventScroll: true }); }
   }
@@ -1767,7 +1807,7 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   window.onHiddenFrameLoad = function () {
     if (!submitted) return;
     $("ti-feedback").innerHTML = '<span class="ok">Successfully submitted. '
-      + (records.length >= GOAL ? "You can close this page, or keep practicing." : "You can close this page, or go back and keep working.")
+      + (gradedRight() >= GOAL ? "You can close this page, or keep practicing." : "You can close this page, or go back and keep working.")
       + "</span>";
     $("gform").classList.add("off");
   };
@@ -1784,10 +1824,11 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   $("gform").addEventListener("submit", () => {
     const ln = $("lastName").value.trim(), fn = $("firstName").value.trim();
     $("studentName").value = `Period ${$("studentPeriod").value.trim()} \u2014 ${ln} \u2014 ${fn}`
-      + ` \u2014 ${rightCount()} right \u2014 ${DRILL_NAME} (${records.length} problems)`;
-    $("formScore").value = records.length;
+      + ` \u2014 ${gradedRight()}/${GOAL} right \u2014 ${DRILL_NAME} (${records.length} tries)`;
+    $("formScore").value = gradedRight();
     submitted = true;
     submittedAt = records.length;
+    submittedRight = gradedRight();
   });
 
   $("ti-back").addEventListener("click", backToPractice);
