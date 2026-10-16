@@ -500,6 +500,50 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
 @media (max-width: 380px) { .ds-stage, .id-stage { font-size: 1.45rem !important; } }
 @media (max-width: 380px) { .cm-stage { font-size: 1.6rem !important; } .cm-word { font-size: 1.1rem !important; } }
 @media (max-height: 680px) { .commute.compact { padding: .5rem .8rem .6rem; } .commute.compact .cm-stage { padding: .4em 0 .35em; } }
+
+/* ---------- quiz-style problems (variables, exponents, mixed numbers, negatives) ---------- */
+.mx { white-space: nowrap; }
+.mx .frac { margin-left: .06em; }
+.eq.long { font-size: clamp(1rem, min(3.7vw, 4vh), 1.75rem); }
+.eq .eqs.ne { color: var(--wrong); font-weight: 700; }
+.result.fix { color: var(--ok); font-size: clamp(1.05rem, 4vw, 1.55rem); }
+.result.fix .fixlab { color: var(--muted); font-size: .7em; font-weight: 600; margin-right: .3em; }
+.steps li .opt { font-variant-numeric: lining-nums; }
+.pvbar { background: var(--c-iden-soft); border-left: 5px solid var(--c-iden); border-radius: 10px; padding: .4rem .8rem;
+  margin: 0 0 .6rem; font-size: .88rem; line-height: 1.4; }
+.pvbar b { color: var(--text); }
+/* Not true: multiply it out and compare (300(m² − 1.45) vs 300m² − 1.45) */
+.ms-stage { display: grid; grid-template-columns: auto 1fr; column-gap: .6rem; row-gap: .3em; align-items: center;
+  font-size: 1.9rem; font-weight: 700; padding: 1.15em 0 .35em; line-height: 1.15; }
+.commute.compact .ms-stage { font-size: 1.6rem; }
+.ms-lab { font-size: .78rem; font-weight: 600; color: var(--muted); text-align: right; white-space: nowrap; }
+.ms-row { position: relative; display: flex; justify-content: center; align-items: center; gap: .22em; min-height: 1.4em; }
+.ms-expr .k { display: inline-block; position: relative; z-index: 1; transition: color .3s; }
+.ms-expr .k.copy, .ms-expr .k.hit { color: var(--c-dist); }
+.ms-expr .k.sym { color: var(--muted); font-weight: 400; }
+.ms-expr .k .frac, .ms-chip .frac { font-size: .62em; }
+.ms-arrows { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; }
+.ms-arrows path { fill: none; stroke: var(--c-dist); stroke-width: 3; stroke-linecap: round; }
+.ms-arrows polygon { fill: var(--c-dist); opacity: 0; transition: opacity .15s; }
+.ms-arrows polygon.on { opacity: 1; }
+.ms-chip { position: absolute; top: 0; bottom: 0; margin: auto 0; height: max-content; left: 0; display: inline-flex; align-items: center; gap: .2em;
+  font-size: .78em; padding: .06em .4em; border-radius: .35em; white-space: nowrap; border: 2px solid var(--line);
+  background: var(--surface); color: var(--text); opacity: 0; transform: scale(.3);
+  transition: transform .35s cubic-bezier(.3,1.6,.6,1), opacity .2s, border-color .2s, background-color .2s, color .2s; }
+.ms-chip.show { opacity: 1; transform: scale(1); }
+.ms-chip.right { color: var(--c-dist); border-color: var(--c-dist); background: var(--c-dist-soft); }
+.ms-chip.match { color: var(--ok); border-color: var(--ok); background: var(--ok-soft); }
+.ms-chip.bad { color: var(--wrong); border-color: var(--wrong); background: var(--wrong-soft); animation: ntcrash .5s ease-out; }
+.ms-v { display: inline-block; }
+.ms-mark { font-size: .8em; display: inline-block; width: .9em; text-align: center; visibility: hidden; }
+.ms-mark.on { visibility: visible; }
+.ms-op { position: absolute; top: 0; bottom: 0; margin: auto 0; height: max-content; left: 0; font-size: .78em; color: var(--muted);
+  font-weight: 400; opacity: 0; transition: opacity .3s; }
+.ms-op.show { opacity: 1; }
+.commute.miss .cm-cap { color: var(--text); }
+@media (max-width: 380px) { .ms-stage { font-size: 1.35rem !important; } .ms-lab { font-size: .7rem; } }
+/* wide screens: use more of the width so equations stay on one line */
+@media (min-width: 1000px) { main { max-width: 1080px; } }
 </style>
 </head>
 <body>
@@ -550,7 +594,7 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
       <div class="gcard" data-p="Associative"><h3>Associative</h3><p>Parentheses move<span class="ex">(2 + 8) + 5 = 2 + (8 + 5)</span></p></div>
       <div class="gcard" data-p="Identity"><h3>Identity</h3><p>+ 0 or × 1, even 1 in disguise like 3/3<span class="ex">7 × 1 = 7 &nbsp; 7 + 0 = 7</span></p></div>
       <div class="gcard" data-p="Distributive"><h3>Distributive</h3><p>Multiply each part<span class="ex">3 × (10 + 2) = 30 + 6</span></p></div>
-      <div class="gcard" data-p="Not true"><h3>Not true</h3><p>Swapping doesn't work for − or ÷<span class="ex">10 − 3 ≠ 3 − 10</span></p></div>
+      <div class="gcard" data-p="Not true"><h3>Not true</h3><p>The sides aren't equal: − or ÷ swapped, a part left out, or signs flipped<span class="ex">10 − 3 ≠ 3 − 10</span><span class="ex">7(x − 6) ≠ 7x − 6</span></p></div>
     </div>
   </dialog>
 </main>
@@ -856,6 +900,166 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
         vals: [`${k}`, f(1, k)], steps: [], side: false };
     }
   ];
+
+  /* ---------- Quiz-style problems (like the Friday Properties quiz) ----------
+     Variables, exponents, mixed numbers, decimals and negatives, plus the
+     "looks right but isn't" answer choices as Not true problems.
+     Each one is tagged quiz so the preview copy can show them first. */
+  const quiz = (fn) => { fn.quiz = true; return fn; };
+  const mix = (w, n, d) => `<span class="mx">${w}${f(n, d)}</span>`;
+  const SUP = { 2: "²", 3: "³" };
+  const pw = (v, e) => e > 1 ? `${v}<sup>${e}</sup>` : v;     // x³ on screen
+  const pwT = (v, e) => e > 1 ? v + SUP[e] : v;              // x³ in plain text
+  const V = () => pick(["x", "y", "n", "t", "m", "b", "k"]);
+  const gcd = (x, y) => y ? gcd(y, x % y) : x;
+  const properFrac = (ds) => { const d = pick(ds); let n; do { n = R(1, d - 1); } while (gcd(n, d) !== 1); return [n, d]; };
+  const someMixed = () => { const [n, d] = properFrac([2, 3, 4, 5, 8]), w = R(1, 9); return { html: mix(w, n, d), text: `${w} ${n}/${d}` }; };
+  const mixedPair = () => { // 5½ and 2½: the fractions make a whole
+    const d = pick([2, 3, 4, 5]), n = R(1, d - 1), w1 = R(2, 9), w2 = R(1, 6);
+    return [mix(w1, n, d), mix(w2, d - n, d)];
+  };
+  const decimal2 = () => notTen(101, 399) / 100;               // 1.24, never 1.20
+
+  GEN.Commutative.push(
+    quiz(() => { // −2x + 7⅕ = 7⅕ − 2x
+      const v = V(), c = R(2, 9), K = someMixed(), T = `${c}${v}`;
+      return { mem: { t: [`−${T}`, K.html], op: "+", cap: "Terms move. The sign goes with its term." },
+        l: `${h(`−${T}`)} + ${K.html}`, r: `${K.html} ${h(`− ${T}`)}`,
+        tell: `−${T} and ${K.text} traded places. The minus sign stayed with the ${T}.`, side: false };
+    }),
+    quiz(() => { // 15(4x − ⅓) = (4x − ⅓)15     200(m² − 1.24) = (m² − 1.24)200
+      const v = V();
+      const [a, inner] = pick([
+        () => { const d = pick([3, 4, 5]); return [d * R(2, 6), `${R(2, 9)}${v} − ${f(1, d)}`]; },
+        () => [pick([10, 100, 200, 300]), `${pw(v, 2)} − ${plain(decimal2())}`],
+        () => [R(3, 9), `${R(2, 9)}${v} + ${someMixed().html}`]
+      ])();
+      return { mem: { t: [a, `(${inner})`], op: "" }, l: `${h(a)}(${inner})`, r: `(${inner})${h(a)}`,
+        tell: `${a} moved to the other side. Nothing inside the parentheses changed.`, side: false };
+    }),
+    quiz(() => { // x³ · 7 = 7x³
+      const v = V(), e = R(2, 3), a = R(2, 9);
+      return { mem: { t: [pw(v, e), a], op: "·" }, l: `${h(pw(v, e))} · ${a}`, r: `${a}${h(pw(v, e))}`,
+        tell: `${a} and ${pwT(v, e)} traded places. ${a}${pwT(v, e)} means ${a} · ${pwT(v, e)}.`, side: false };
+    })
+  );
+
+  GEN.Associative.push(
+    quiz(() => { // 5½ + (4t + 2½) = (5½ + 4t) + 2½
+      const v = V(), [M1, M2] = mixedPair(), T = `${R(2, 9)}${v}`;
+      return { mem: { t: [M1, T, M2], op: "+", from: 1, to: 0 }, l: `${M1} + (${T} + ${M2})`, r: `${h(`(${M1} + ${T})`)} + ${M2}`,
+        tell: "Same order, parentheses moved.", side: false };
+    }),
+    quiz(() => { // 7 · (x³ · ⅘) = (7 · x³) · ⅘
+      const v = V(), e = R(2, 3), a = R(2, 9), [n, d] = properFrac([3, 5, 7, 8]), X = pw(v, e);
+      return { mem: { t: [a, X, f(n, d)], op: "·", from: 1, to: 0 }, l: `${a} · (${X} · ${f(n, d)})`, r: `${h(`(${a} · ${X})`)} · ${f(n, d)}`,
+        tell: "Same order, parentheses moved.", side: false };
+    }),
+    quiz(() => { // (6y + 2.7) + 1.3 = 6y + (2.7 + 1.3) = 6y + 4
+      const v = V(), T = `${R(2, 9)}${v}`, S = R(3, 9);
+      let a; do { a = R(11, S * 10 - 11); } while (a % 10 === 0);
+      const p = plain(a / 10), q = plain((S * 10 - a) / 10);
+      return { mem: { t: [T, p, q], op: "+", from: 0, to: 1 }, l: `(${T} + ${p}) + ${q}`, r: `${T} + ${h(`(${p} + ${q})`)}`,
+        tell: "Same order, parentheses moved.", steps: [[`${p} + ${q}`, String(S)]], ans: `${T} + ${S}`, side: false };
+    })
+  );
+
+  GEN.Distributive.push(
+    quiz(() => { // 15(4x − ⅓) = 60x − 5
+      const v = V(), d = pick([2, 3, 4, 5]), k = R(2, 5), a = d * k, c = R(2, 9), op = pick(["+", "−"]);
+      return { mem: { a, parts: [`${c}${v}`, f(1, d)], op, dot: true }, l: `${a}(${c}${v} ${op} ${f(1, d)})`, r: `${h(`${a * c}${v}`)} ${op} ${h(k)}`,
+        tell: `${a} times each part: ${a} · ${c}${v} = ${a * c}${v} and ${a} · 1/${d} = ${k}.`, side: false };
+    }),
+    quiz(() => { // 200(m² − 1.24) = 200m² − 248
+      const v = V(), a = pick([10, 100, 200, 300, 1000]), dec = decimal2(), X = pw(v, 2);
+      return { mem: { a, parts: [X, plain(dec)], op: "−", dot: true }, l: `${a}(${X} − ${plain(dec)})`, r: `${h(`${a}${X}`)} − ${h(plain(a * dec))}`,
+        tell: `${a} times each part: ${a} · ${v}² = ${a}${v}² and ${a} · ${plain(dec)} = ${plain(a * dec)}.`, side: false };
+    }),
+    quiz(() => { // 7x − 42 = 7(x − 6)
+      const v = V(), a = R(3, 9), k = R(2, 9), op = pick(["+", "−"]);
+      return { mem: { a, parts: [v, k], op, factor: true, dot: true }, l: `${a}${v} ${op} ${a * k}`, r: `${h(a)}(${v} ${op} ${k})`,
+        tell: `${a} factored out: ${a}${v} = ${a} · ${v} and ${a * k} = ${a} · ${k}.`, side: false };
+    }),
+    quiz(() => { // −3(9x + 5 − 4b) = −27x − 15 + 12b, worked one part at a time
+      const v = V(); let w; do { w = V(); } while (w === v);
+      const a = R(2, 6), b = R(2, 9), c = R(2, 9), d = R(2, 9), A = `−${a}`, P = (s) => `(${A})(${s})`;
+      return { mem: { a: A, parts: [`${b}${v}`, c, `${d}${w}`], ops: ["+", "−"], dot: true }, long: true, fixedOrder: true,
+        l: `${A}(${b}${v} + ${c} − ${d}${w})`, r: `${h(P(`${b}${v}`))} + ${h(P(c))} − ${h(P(`${d}${w}`))}`,
+        tell: `${A} times each of the three parts. Watch the signs.`,
+        steps: [
+          mc(P(`${b}${v}`), `−${a * b}${v}`, [`${a * b}${v}`, `−${a + b}${v}`]),
+          mc(`+ ${P(c)}`, `− ${a * c}`, [`+ ${a * c}`, `− ${a + c}`]),
+          mc(`− ${P(`${d}${w}`)}`, `+ ${a * d}${w}`, [`− ${a * d}${w}`, `+ ${a + d}${w}`])
+        ],
+        ans: `−${a * b}${v} − ${a * c} + ${a * d}${w}`, side: false };
+    })
+  );
+
+  GEN.Identity.push(
+    quiz(() => { // −4x² · 1 = −4x²     0 + 2½t = 2½t
+      const v = V(), T = pick([`−${R(2, 9)}${pw(v, R(2, 3))}`, `${someMixed().html}${v}`, `0.${R(2, 9)}${v}`]);
+      return pick([
+        () => ({ mem: { n: T, tok: "· 1" }, l: `${T} · ${h(1)}`, r: T, tell: "· 1 keeps the value, even with variables." }),
+        () => ({ mem: { n: T, tok: "0 +", before: true }, l: `${h(0)} + ${T}`, r: T, tell: "Adding 0 keeps the value, even with variables." })
+      ])();
+    })
+  );
+
+  // Not true: the wrong answer choices from the quiz. After answering, the page shows the fixed version.
+  GEN["Not true"].push(
+    quiz(() => { // −2x + 7⅕ ≠ −7⅕ + 2x   (signs flipped)
+      const v = V(), c = R(2, 9), K = someMixed();
+      return { l: `−${c}${v} + ${K.html}`, r: `${h(`−${K.html}`)} + ${h(`${c}${v}`)}`,
+        tell: "Not equal: the signs flipped. Moving terms around never changes their signs.",
+        fix: `−${c}${v} + ${K.html} = ${K.html} − ${c}${v}`, steps: [], side: false };
+    }),
+    quiz(() => { // 200(m² − 1.24) ≠ 200m² − 1.24   (only the first part multiplied)
+      const v = V(), a = pick([10, 100, 200, 300]), dec = decimal2(), X = pw(v, 2);
+      return { l: `${a}(${X} − ${plain(dec)})`, r: `${a}${X} − ${h(plain(dec))}`,
+        tell: `Not equal: ${a} only multiplied the first part. It has to multiply ${plain(dec)} too.`,
+        mem: { miss: true, a, parts: [X, plain(dec)], ops: ["−", "−"], right: [`${a}${X}`, plain(a * dec)], wrong: [`${a}${X}`, plain(dec)],
+          cap: `The ${plain(dec)} never got multiplied by ${a}.` },
+        steps: [],
+        fix: `${a}(${X} − ${plain(dec)}) = ${a}${X} − ${plain(a * dec)}`, side: false };
+    }),
+    quiz(() => { // 15(4x − ⅓) ≠ 60x − 3   (wrong constant)
+      const v = V(), d = pick([3, 4, 5]), c = R(2, 9);
+      let k; do { k = R(2, 5); } while (k === d);
+      const a = d * k;
+      return { l: `${a}(${c}${v} − ${f(1, d)})`, r: `${a * c}${v} − ${h(d)}`,
+        tell: `Not equal: ${a} · 1/${d} isn't ${d}.`,
+        mem: { miss: true, a, parts: [`${c}${v}`, f(1, d)], ops: ["−", "−"], right: [`${a * c}${v}`, String(k)], wrong: [`${a * c}${v}`, String(d)],
+          cap: `${a} · 1/${d} is ${k}, not ${d}.` },
+        steps: [],
+        fix: `${a}(${c}${v} − ${f(1, d)}) = ${a * c}${v} − ${k}`, side: false };
+    }),
+    quiz(() => { // 7x − 42 ≠ 7(x − 42)   (factored only the first part)
+      const v = V(), a = R(3, 9), k = R(2, 9);
+      return { l: `${a}${v} − ${a * k}`, r: `${a}(${v} − ${h(a * k)})`,
+        tell: `Not equal: ${a}(${v} − ${a * k}) would be ${a}${v} − ${a * a * k}. The ${a * k} has to be divided by ${a} too.`,
+        mem: { miss: true, a, parts: [v, a * k], ops: ["−", "−"], right: [`${a}${v}`, String(a * a * k)], wrong: [`${a}${v}`, String(a * k)],
+          cap: `${a} · ${a * k} is ${a * a * k}, not ${a * k}.` },
+        stepsTitle: "Fix it", steps: [[`${a * k} ÷ ${a}`, String(k)]],
+        fix: `${a}${v} − ${a * k} = ${a}(${v} − ${k})`, side: false };
+    }),
+    quiz(() => { // −5x + 20 ≠ 5(x − 4)   (factored out the wrong sign)
+      const v = V(), a = R(2, 9), k = R(2, 9);
+      return { l: `−${a}${v} + ${a * k}`, r: `${h(a)}(${v} − ${k})`,
+        tell: `Not equal: ${a}(${v} − ${k}) is ${a}${v} − ${a * k}. The signs are backwards.`,
+        mem: { miss: true, a, parts: [v, k], exprOp: "−", ops: ["", ""], right: [`${a}${v}`, `− ${a * k}`], wrong: [`−${a}${v}`, `+ ${a * k}`],
+          cap: "The signs are backwards." },
+        steps: [],
+        fix: `−${a}${v} + ${a * k} = −${a}(${v} − ${k})`, side: false };
+    }),
+    quiz(() => { // 7 · (x³ · ⅘) ≠ 4 · (x³ · 5)   (numbers changed)
+      const v = V(), e = R(2, 3), a = R(2, 9), d = pick([5, 7, 8]), X = pw(v, e);
+      let n; do { n = R(2, d - 1); } while (gcd(n, d) !== 1 || n === a);
+      return { l: `${a} · (${X} · ${f(n, d)})`, r: `${h(n)} · (${X} · ${h(d)})`,
+        tell: "Not equal: the numbers changed. Properties move numbers and parentheses around, but they never change them.",
+        fix: `${a} · (${X} · ${f(n, d)}) = (${a} · ${X}) · ${f(n, d)}`, steps: [], side: false };
+    })
+  );
+
   const PROPS = ["Commutative", "Associative", "Identity", "Distributive", "Not true"];
   const $ = (id) => document.getElementById(id);
   let item = null, shown = null, phase = "prop", lastProp = null, lastKey = "";
@@ -869,6 +1073,9 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
      (Mistakes on the adding/multiplying steps are fine and don't affect this.)
      After the 30th right answer: turn-in page, then open-ended random practice. */
   const GOAL = 30, DRILL_NAME = "Name That Property";
+  // Preview copy: the quiz-style problems come first and nothing is sent to the Google Form.
+  // (Also turns on with ?preview at the end of the page address.)
+  const PREVIEW = false || /[?&]preview\b/.test(location.search);
   const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   let deck;
   for (let tries = 0; tries < 500; tries++) {
@@ -955,6 +1162,19 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   // 3 more of the Associative slots in the graded set get one of these
   const mmSlots = new Set(shuffle(deck.map((p, i) => i).filter(i => deck[i] === "Associative")).slice(0, 4));
   const queue = deck.map((p, i) => ({ p, mm: mmSlots.has(i) }));
+  const FRONT_LOAD = false; // true = show every quiz-style type once, up front (for checking them all quickly)
+  if (PREVIEW && FRONT_LOAD) { // every quiz-style type once, up front, each taking one of its property's 6 slots
+    const tri = (s) => s.some((x, i) => i > 1 && x.p === s[i - 1].p && x.p === s[i - 2].p);
+    let tour = PROPS.flatMap(p => GEN[p].filter(g => g.quiz).map(gen => ({ p, gen })));
+    for (let k = 0; k < 500 && tri(tour); k++) shuffle(tour);
+    const front = tour.map(t => {
+      let i = queue.findIndex(s => s.p === t.p && !s.mm);
+      if (i < 0) i = queue.findIndex(s => s.p === t.p);
+      queue.splice(i, 1);
+      return { p: t.p, mm: false, gen: t.gen };
+    });
+    queue.unshift(...front);
+  }
   // a missed problem goes back in a few problems later (sooner near the end), never a third in a row
   function requeue(slot) {
     const hi = queue.length, lo = Math.min(hi, 3);
@@ -974,12 +1194,12 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     if (!typeBags[p] || !typeBags[p].length) typeBags[p] = shuffle(GEN[p].map((_, i) => i));
     return GEN[p][typeBags[p].pop()];
   };
-  function makeItem(forced, mm) {
+  function makeItem(forced, mm, chosen) {
     let p;
     do {
       p = forced || PROPS[Math.floor(Math.random() * PROPS.length)];
     } while (!forced && p === lastProp && Math.random() < 0.6); // fewer back-to-back repeats
-    const gen = p === "Associative" && (mm || (!forced && Math.random() < 0.5)) ? mental : nextType(p);
+    const gen = chosen || (p === "Associative" && (mm || (!forced && Math.random() < 0.5)) ? mental : nextType(p));
     let g, key;
     for (let tries = 0; tries < 40; tries++) { // new numbers until it's a problem we haven't had
       g = gen();
@@ -1016,7 +1236,7 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   function render() {
     served++;
     const slot = queue.length ? queue.shift() : null;
-    item = makeItem(slot ? slot.p : null, slot ? slot.mm : false);
+    item = makeItem(slot ? slot.p : null, slot ? slot.mm : false, slot && slot.gen);
     item.graded = !!slot; item.slot = slot;
     $("redo").hidden = true;
     phase = "prop";
@@ -1026,11 +1246,14 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     const e = $("eq");
     e.innerHTML = item.custom || `<span class="side">${shown.left}</span><span class="side"><span class="eqs">=</span> ${shown.right}</span>`;
     e.classList.remove("revealed", "mm-two");
+    e.classList.toggle("long", !!item.long);
+    fitEq();
     const qcard = e.closest(".question");
     qcard.dataset.p = item.p;
     qcard.querySelector(".prompt").textContent = item.prompt || "Which property? Or is it not true?";
     $("feedback").insertBefore($("sideQ"), $("reveal")); // side question normally lives in the feedback box
-    $("result").classList.remove("show");
+    $("result").classList.remove("show", "fix");
+    $("result").innerHTML = "";
     $("feedback").classList.remove("show");
     $("commuteSlot").innerHTML = "";
     $("sideQ").classList.remove("show");
@@ -1098,7 +1321,8 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     $("tell").textContent = item.tell;
     fb.classList.add("show");
     // commutative and associative problems get their memory card ("commute" / "associate")
-    showMemory({ Commutative: "comm", Associative: "assoc", Distributive: "dist", Identity: "ident", "Not true": "nope" }[item.p] || null);
+    showMemory(item.mem && item.mem.miss ? "miss"
+      : { Commutative: "comm", Associative: "assoc", Distributive: "dist", Identity: "ident", "Not true": "nope" }[item.p] || null);
 
     if (!ok) { // wrong property: no working it out, straight on to the next problem
       $("sideQ").classList.remove("show");
@@ -1171,6 +1395,7 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     $("next").hidden = true;
     $("reveal").classList.add("show");
     $("solveTitle").hidden = !item.steps.length;
+    $("solveTitle").textContent = item.stepsTitle || "Solve it";
     showStep(0);
   }
 
@@ -1256,6 +1481,22 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     document.querySelectorAll(`#eq [data-slot="${k}"]`).forEach(el => { el.innerHTML = item.steps[k][1]; el.classList.add("filled"); });
   }
 
+  // keep an equation on one line: shrink the font (down to 60%, never below 18px) before letting it wrap.
+  // Only on phones, where that still won't fit, does it wrap to a second line.
+  function fitEq() {
+    const e = $("eq");
+    e.style.fontSize = "";
+    const kids = [...e.children];
+    if (!kids.some(k => k.classList.contains("side")) || e.classList.contains("mm-two")) return;
+    e.style.flexWrap = "nowrap";
+    const need = kids[kids.length - 1].getBoundingClientRect().right - kids[0].getBoundingClientRect().left;
+    const room = e.clientWidth - 4;
+    e.style.flexWrap = "";
+    const size = parseFloat(getComputedStyle(e).fontSize) * room / need * 0.98;
+    if (need > room && room > 0 && room / need >= 0.6 && size >= 18) e.style.fontSize = size + "px";
+  }
+  addEventListener("resize", () => { if (item) fitEq(); });
+
   function finish() {
     phase = "done";
     if (item.vals) { // Not true: each side's value right under it
@@ -1264,10 +1505,17 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
         + `<span class="nt-ne" aria-label="is not equal to">≠</span>`
         + `<span class="side nt-side"><span class="nt-expr">${shown.right}</span><span class="nt-val"><span class="eqs">=</span> ${vr}</span></span>`;
     }
+    if (item.fix) { // Not true (quiz style): mark it ≠ and show the version that IS equal
+      const s = $("eq").querySelector(".eqs");
+      if (s) { s.textContent = "≠"; s.classList.add("ne"); s.setAttribute("aria-label", "is not equal to"); }
+      $("result").innerHTML = `<span class="fixlab">Fixed:</span>${item.fix}`;
+      $("result").classList.add("show", "fix");
+    }
     if (item.after) $("tell").textContent = item.after;
     if (item.steps.length && item.ans) {
       (item.mm && $("eq").querySelector(".storyeq") || $("eq")).insertAdjacentHTML("beforeend", `<span class="side res"><span class="eqs">=</span> ${item.ans}</span>`);
     }
+    fitEq();
     const nb = $("next");
     nb.textContent = item.graded && gradedRight() >= GOAL && !autoShown ? "Turn in my work" : "Next";
     nb.hidden = false;
@@ -1282,6 +1530,8 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   function reflow(el) { void el.offsetWidth; }
   const plainText = (html) => {
     const d = document.createElement("div"); d.innerHTML = String(html);
+    d.querySelectorAll("sup").forEach(n => { n.textContent = SUP[n.textContent] || "^" + n.textContent; });
+    d.querySelectorAll(".mx > .frac").forEach(n => n.before(" ")); // 5½ reads "5 1/2", not "51/2"
     d.querySelectorAll(".frac").forEach(n => { const [x, y] = n.children; n.textContent = `${x.textContent}/${y.textContent}`; });
     return d.textContent.replace(/\s+/g, " ").trim();
   };
@@ -1289,12 +1539,16 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   const joinT = (t, op) => t.map(plainText).join(op ? ` ${op} ` : "");
   const replayBtn = `<button class="cm-replay" type="button" aria-label="Watch again" title="Watch again">↻</button>`;
 
-  // Commutative: the 2nd and 3rd numbers drive past each other (start = the side shown first)
+  // Commutative: the last two terms drive past each other (start = the side shown first).
+  // t can have 3 terms (the first one stays put) or just 2 (both move).
   function makeCommute(compact, m) {
-    const t = m.t, first = m.swap ? [t[0], t[2], t[1]] : t;
+    const t = m.t, two = t.length === 2;
+    const first = two ? (m.swap ? [t[1], t[0]] : t) : (m.swap ? [t[0], t[2], t[1]] : t);
+    const after = two ? [first[1], first[0]] : [first[0], first[2], first[1]];
+    const lead = two ? "" : `<span>${first[0]}</span>${opHtml(m.op)}`;
     const d = document.createElement("div");
     d.className = "commute" + (compact ? " compact" : "");
-    d._start = [first[1], first[2]];
+    d._start = first.slice(-2);
     d.innerHTML = `
       <div class="cm-word"><span class="cm-root">COMMUT</span><span class="cm-rest">ATIVE</span></div>
       <div class="cm-road" aria-hidden="true">
@@ -1302,10 +1556,10 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
         <span class="cm-track"><span class="cm-car">🚗</span></span>
         <span class="cm-place">🏢</span>
       </div>
-      <div class="cm-stage" role="img" aria-label="${joinT(first, m.op)} becomes ${joinT([first[0], first[2], first[1]], m.op)}. The numbers trade places.">
-        <span>${first[0]}</span>${opHtml(m.op)}<span class="cm-tile" data-k="a"></span>${opHtml(m.op)}<span class="cm-tile" data-k="b"></span>
+      <div class="cm-stage" role="img" aria-label="${joinT(first, m.op)} becomes ${joinT(after, m.op)}. The terms trade places.">
+        ${lead}<span class="cm-tile" data-k="a"></span>${opHtml(m.op)}<span class="cm-tile" data-k="b"></span>
       </div>
-      <p class="cm-cap">Numbers move.</p>${replayBtn}`;
+      <p class="cm-cap">${m.cap || "Numbers move."}</p>${replayBtn}`;
     d.querySelector(".cm-replay").addEventListener("click", () => playCommute(d));
     return d;
   }
@@ -1435,14 +1689,18 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
      arrows show where it goes, then a copy lands at each part. Factoring plays the other way. */
   // "a 5", "an 8", "an 11", "an 18"
   const anA = (n) => { const t = plainText(n); return /^8/.test(t) || /^1[18]$/.test(t) ? "an" : "a"; };
+  // parts can be 2 or 3 (−3(9x + 5 − 4b)); ops between them default to m.op; dot: write · instead of ×
+  const dsOps = (m) => m.ops || m.parts.slice(1).map(() => m.op);
+  const dsX = (m) => m.dot ? "·" : "×";
+  const dsCopy = (m) => /^[−-]/.test(plainText(m.a)) ? `(${m.a})` : m.a; // a negative copy wears parentheses: (−3) · 9x
   function makeDist(compact, m) {
     const d = document.createElement("div");
     d.className = "commute dist" + (compact ? " compact" : "");
     d._m = m;
     d._start = (!!m.factor !== !!m.swap) ? "E" : "P";
-    const pt = (k) => plainText(k);
-    const P = `${pt(m.a)}${m.cross ? " × " : ""}(${pt(m.parts[0])} ${m.op} ${pt(m.parts[1])})`;
-    const E = `${pt(m.a)} × ${pt(m.parts[0])} ${m.op} ${pt(m.a)} × ${pt(m.parts[1])}`;
+    const pt = (k) => plainText(k), ops = dsOps(m), X = dsX(m);
+    const P = `${pt(m.a)}${m.cross ? ` ${X} ` : ""}(${m.parts.map((p, i) => (i ? ` ${ops[i - 1]} ` : "") + pt(p)).join("")})`;
+    const E = m.parts.map((p, i) => (i ? ` ${ops[i - 1]} ` : "") + `${pt(dsCopy(m))} ${X} ${pt(p)}`).join("");
     const [from, to] = d._start === "P" ? [P, E] : [E, P];
     d.innerHTML = `
       <div class="cm-word"><span class="cm-root">DISTRIBUT</span><span class="cm-rest">IVE</span> <span class="cm-emoji">📬</span></div>
@@ -1451,13 +1709,23 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     d.querySelector(".cm-replay").addEventListener("click", () => playDist(d));
     return d;
   }
+  // P: a ( p0 o1 p1 … )      E: a0 x0 p0 o1 a1 x1 p1 …
   function dsKeys(m, layout) {
-    return layout === "P"
-      ? ["a", ...(m.cross ? ["x0"] : []), "lp", "B", "op", "k", "rp"]
-      : ["a1", "x1", "B", "op", "a2", "x2", "k"];
+    const n = m.parts.length, out = [];
+    if (layout === "P") {
+      out.push("a"); if (m.cross) out.push("xc"); out.push("lp");
+      for (let i = 0; i < n; i++) { if (i) out.push("o" + i); out.push("p" + i); }
+      out.push("rp");
+    } else for (let i = 0; i < n; i++) { if (i) out.push("o" + i); out.push("a" + i, "x" + i, "p" + i); }
+    return out;
   }
   function dsText(m, key) {
-    return { a: m.a, a1: m.a, a2: m.a, B: m.parts[0], k: m.parts[1], op: m.op, x0: "×", x1: "×", x2: "×", lp: "(", rp: ")" }[key];
+    if (key === "a") return m.a;
+    if (/^a\d/.test(key)) return dsCopy(m);
+    if (/^p\d/.test(key)) return m.parts[+key.slice(1)];
+    if (/^o\d/.test(key)) return dsOps(m)[+key.slice(1) - 1];
+    if (/^x/.test(key)) return dsX(m);
+    return key === "lp" ? "(" : ")";
   }
   // draw a layout; when animating, every piece slides from where it was (FLIP), copies come from the carrier
   function dsRender(el, layout, animate) {
@@ -1465,27 +1733,30 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     const old = {};
     if (animate) st.querySelectorAll("[data-key]").forEach(n => { old[n.dataset.key] = n.getBoundingClientRect(); });
     st.innerHTML = dsKeys(m, layout).map(k => {
-      const cls = /^a/.test(k) ? "copy" : /^(x|lp|rp|op)/.test(k) ? "sym" : "";
+      const cls = /^a/.test(k) ? "copy" : /^(x|lp|rp|o)/.test(k) ? "sym" : "";
       return `<span class="k ${cls}" data-key="${k}">${dsText(m, k)}</span>`;
     }).join("");
     el._layout = layout;
     if (!animate) return;
     const S = st.getBoundingClientRect(), moves = [];
     st.querySelectorAll("[data-key]").forEach(n => {
-      const k = n.dataset.key, r = n.getBoundingClientRect();
-      const src = old[k] || ((k === "a1" || k === "a2") && old.a) || (k === "a" && old.a1);
+      const k = n.dataset.key, r = n.getBoundingClientRect(), copy = /^a\d/.test(k);
+      const src = old[k] || (copy && old.a) || (k === "a" && old.a0);
       if (src) {
         n.style.transform = `translate(${src.left - r.left}px, ${src.top - r.top}px)`;
-        moves.push([n, k === "a2" ? 260 : 0]);
+        moves.push([n, copy && !old[k] ? +k.slice(1) * 240 : 0]);
       } else { n.style.opacity = "0"; moves.push([n, -1]); }
     });
-    if (layout === "P" && old.a2) { // the second copy flies back into the carrier too
-      const a = st.querySelector('[data-key="a"]').getBoundingClientRect(), g = document.createElement("span");
-      g.className = "ds-ghost"; g.innerHTML = dsText(m, "a2");
-      g.style.left = (old.a2.left - S.left) + "px"; g.style.top = (old.a2.top - S.top) + "px";
-      st.appendChild(g);
-      moves.push([g, 0, `translate(${a.left - old.a2.left}px, ${a.top - old.a2.top}px)`]);
-      setTimeout(() => g.remove(), 900);
+    if (layout === "P" && old.a) { // the other copies fly back into the carrier too
+      const a = st.querySelector('[data-key="a"]').getBoundingClientRect();
+      Object.keys(old).filter(k => /^a[1-9]/.test(k)).forEach(k => {
+        const g = document.createElement("span");
+        g.className = "ds-ghost"; g.innerHTML = dsText(m, k);
+        g.style.left = (old[k].left - S.left) + "px"; g.style.top = (old[k].top - S.top) + "px";
+        st.appendChild(g);
+        moves.push([g, 0, `translate(${a.left - old[k].left}px, ${a.top - old[k].top}px)`]);
+        setTimeout(() => g.remove(), 900);
+      });
     }
     reflow(st);
     moves.forEach(([n, delay, end]) => {
@@ -1493,6 +1764,16 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
       n.style.transition = `transform .75s ease-in-out ${delay}ms`;
       n.style.transform = end || "";
     });
+  }
+  // long ones (three parts, x², fractions) shrink to fit the card instead of running off the edge
+  function dsFit(el) {
+    const st = el.querySelector(".ds-stage");
+    st.style.fontSize = "";
+    dsRender(el, "E", false); // the spread-out layout is the widest
+    const ks = st.querySelectorAll("[data-key]"), room = st.clientWidth - 12;
+    if (!ks.length || room <= 0) return;
+    const w = ks[ks.length - 1].getBoundingClientRect().right - ks[0].getBoundingClientRect().left;
+    if (w > room) st.style.fontSize = (parseFloat(getComputedStyle(st).fontSize) * room / w) + "px";
   }
   // the "rainbow arrows" from the carrier to each part
   async function dsArrows(el, alive) {
@@ -1502,11 +1783,11 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     const svg = document.createElementNS(NS, "svg");
     svg.setAttribute("class", "ds-arrows"); svg.setAttribute("aria-hidden", "true");
     st.appendChild(svg);
-    for (const k of ["B", "k"]) {
-      const t = get(k);
+    for (let i = 0; i < el._m.parts.length; i++) {
+      const t = get("p" + i);
       const x1 = a.left + a.width / 2 - S.left, y1 = a.top - S.top + a.height * 0.12;
       const x2 = t.left + t.width / 2 - S.left, y2 = t.top - S.top + t.height * 0.08;
-      const cx = (x1 + x2) / 2, cy = Math.min(y1, y2) - a.height * (k === "B" ? 0.75 : 1.05);
+      const cx = (x1 + x2) / 2, cy = Math.min(y1, y2) - a.height * (0.75 + 0.3 * i);
       const path = document.createElementNS(NS, "path");
       path.setAttribute("d", `M${x1} ${y1} Q${cx} ${cy} ${x2} ${y2}`);
       svg.appendChild(path);
@@ -1533,6 +1814,7 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
       if (layout === "E") { await dsArrows(el, alive); if (!alive()) return; await wait(350); if (!alive()) return; }
       dsRender(el, layout, true);
     };
+    dsFit(el);
     dsRender(el, start, false);
     await wait(900); if (!alive()) return;
     await go(other); if (!alive()) return;
@@ -1666,13 +1948,115 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     await nopeTry(el, alive);
   }
 
+  /* Not true, a distributing mistake: 300(m² − 1.45) ≠ 300m² − 1.45.
+     Arrows carry the outside number to each part, the "multiplied" row shows what each part becomes,
+     then the other side's terms drop in underneath: ✓ where they match, ✕ where they don't.
+       mem = { miss: true, a, parts: [p0, p1], ops: [multiplied op, other side op], right: [...], wrong: [...], cap } */
+  function makeMiss(compact, m) {
+    const d = document.createElement("div");
+    d.className = "commute nope miss" + (compact ? " compact" : "");
+    d._m = m;
+    const [opR, opW] = m.ops;
+    const expr = m.parts.map((p, i) => (i ? `<span class="k sym">${m.exprOp || opR}</span>` : "") + `<span class="k part" data-i="${i}">${p}</span>`).join("");
+    const chips = (cls, vals, op) => vals.map((v, i) => `<span class="ms-chip ${cls}" data-i="${i}"><span class="ms-v">${v}</span>${cls === "wrong" ? '<span class="ms-mark" aria-hidden="true">✓</span>' : ""}</span>`).join("")
+      + `<span class="ms-op">${op}</span>`;
+    const pt = plainText;
+    const label = `${pt(m.a)}(${pt(m.parts[0])} ${m.exprOp || opR} ${pt(m.parts[1])}) multiplies out to ${pt(m.right[0])} ${opR} ${pt(m.right[1])}, `
+      + `but the other side is ${pt(m.wrong[0])} ${opW} ${pt(m.wrong[1])}. They don't match.`;
+    d.innerHTML = `
+      <div class="cm-word"><span class="cm-root">NOT</span><span class="cm-rest"> TRUE</span> <span class="cm-emoji">🚧</span></div>
+      <div class="ms-stage" role="img" aria-label="${label}">
+        <span class="ms-lab"></span><div class="ms-row ms-expr"><span class="k copy">${m.a}</span><span class="k sym">(</span>${expr}<span class="k sym">)</span></div>
+        <span class="ms-lab">multiplied</span><div class="ms-row ms-right">${chips("right", m.right, opR)}</div>
+        <span class="ms-lab">other side</span><div class="ms-row ms-wrong">${chips("wrong", m.wrong, opW)}</div>
+      </div>
+      <p class="cm-cap">${m.cap}</p>${replayBtn}`;
+    d.querySelector(".cm-replay").addEventListener("click", () => playMiss(d));
+    return d;
+  }
+  // put each chip under its part (pushed apart if they'd overlap), with the + or − between them
+  function msPlace(el) {
+    const st = el.querySelector(".ms-stage"); if (!st) return;
+    st.style.fontSize = "";
+    const expr = el.querySelector(".ms-expr"), ks = expr.querySelectorAll(".k");
+    if (!expr.clientWidth) return;
+    const w = ks[ks.length - 1].getBoundingClientRect().right - ks[0].getBoundingClientRect().left;
+    if (w > expr.clientWidth - 6) st.style.fontSize = (parseFloat(getComputedStyle(st).fontSize) * (expr.clientWidth - 6) / w) + "px";
+    const R = expr.getBoundingClientRect();
+    const cx = [...expr.querySelectorAll(".part")].map(p => { const r = p.getBoundingClientRect(); return r.left + r.width / 2 - R.left; });
+    el.querySelectorAll(".ms-right, .ms-wrong").forEach(row => {
+      const cs = [...row.querySelectorAll(".ms-chip")], op = row.querySelector(".ms-op");
+      const ws = cs.map(c => c.offsetWidth), L = cs.map((c, i) => cx[i] - ws[i] / 2);
+      const gap = op.offsetWidth + 10, over = L[0] + ws[0] + gap - L[1];
+      if (over > 0) { L[0] -= over / 2; L[1] += over / 2; }
+      cs.forEach((c, i) => { c.style.left = L[i] + "px"; });
+      op.style.left = ((L[0] + ws[0] + L[1]) / 2 - op.offsetWidth / 2) + "px";
+    });
+  }
+  async function playMiss(el) {
+    const run = (el._run || 0) + 1; el._run = run;
+    const alive = () => el._run === run && el.isConnected;
+    const m = el._m, expr = el.querySelector(".ms-expr"), a = expr.querySelector(".copy");
+    const parts = [...expr.querySelectorAll(".part")];
+    const right = [...el.querySelectorAll(".ms-chip.right")], wrong = [...el.querySelectorAll(".ms-chip.wrong")];
+    const [opR, opW] = el.querySelectorAll(".ms-op");
+    expr.querySelectorAll(".ms-arrows").forEach(s => s.remove());
+    parts.forEach(p => p.classList.remove("hit"));
+    [...right, ...wrong, opR, opW].forEach(c => c.classList.remove("show", "match", "bad"));
+    wrong.forEach(c => { const mk = c.querySelector(".ms-mark"); mk.textContent = "✓"; mk.classList.remove("on"); }); // room saved for the mark
+    msPlace(el);
+    await wait(700); if (!alive()) return;
+    // arrows from the outside number to each part; each part's result pops up underneath as the arrow lands
+    const NS = "http://www.w3.org/2000/svg", R = expr.getBoundingClientRect(), A = a.getBoundingClientRect();
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "ms-arrows"); svg.setAttribute("aria-hidden", "true");
+    expr.appendChild(svg);
+    for (let i = 0; i < parts.length; i++) {
+      const T = parts[i].getBoundingClientRect();
+      const x1 = A.left + A.width / 2 - R.left, y1 = A.top - R.top + A.height * 0.12;
+      const x2 = T.left + T.width / 2 - R.left, y2 = T.top - R.top + T.height * 0.08;
+      const cx = (x1 + x2) / 2, cy = Math.min(y1, y2) - A.height * (0.7 + 0.3 * i);
+      const path = document.createElementNS(NS, "path");
+      path.setAttribute("d", `M${x1} ${y1} Q${cx} ${cy} ${x2} ${y2}`);
+      svg.appendChild(path);
+      const ang = Math.atan2(y2 - cy, x2 - cx), z = A.height * 0.22;
+      const head = document.createElementNS(NS, "polygon");
+      head.setAttribute("points", [[x2, y2], [x2 - z * Math.cos(ang - 0.5), y2 - z * Math.sin(ang - 0.5)], [x2 - z * Math.cos(ang + 0.5), y2 - z * Math.sin(ang + 0.5)]].map(p => p.join(",")).join(" "));
+      svg.appendChild(head);
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
+      reflow(expr);
+      path.style.transition = "stroke-dashoffset .6s ease-in-out";
+      path.style.strokeDashoffset = "0";
+      await wait(600); if (!alive()) return;
+      head.classList.add("on");
+      parts[i].classList.add("hit");
+      right[i].classList.add("show");
+      if (i === 1) opR.classList.add("show");
+      await wait(500); if (!alive()) return;
+    }
+    await wait(700); if (!alive()) return;
+    // the other side drops in, one term at a time, checked against the row above it
+    for (let i = 0; i < wrong.length; i++) {
+      wrong[i].classList.add("show");
+      if (i === 1) opW.classList.add("show");
+      await wait(380); if (!alive()) return;
+      const ok = String(m.right[i]) === String(m.wrong[i]);
+      wrong[i].classList.add(ok ? "match" : "bad");
+      const mk = wrong[i].querySelector(".ms-mark"); mk.textContent = ok ? "✓" : "✕"; mk.classList.add("on");
+      await wait(550); if (!alive()) return;
+    }
+  }
+  addEventListener("resize", () => document.querySelectorAll(".commute.miss").forEach(msPlace));
+
   // in the feedback box: each card plays by itself the first 3 times, then it's one tap away
   const MEM = {
     comm: { make: makeCommute, play: playCommute, shows: 0, label: "🚗 Commutative = commute" },
     assoc: { make: makeAssoc, play: playAssoc, shows: 0, label: "👫 Associative = associate" },
     dist: { make: makeDist, play: playDist, shows: 0, label: "📬 Distributive = distribute" },
     ident: { make: makeIdent, play: playIdent, shows: 0, label: "🪪 Identity = your ID" },
-    nope: { make: makeNope, play: playNope, shows: 0, label: "🚧 Not true" }
+    nope: { make: makeNope, play: playNope, shows: 0, label: "🚧 Not true" },
+    miss: { make: makeMiss, play: playMiss, shows: 0, label: "🚧 Not true" }
   };
   function showMemory(kind) {
     const slot = $("commuteSlot");
@@ -1737,7 +2121,8 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
     if (img) return img.getAttribute("aria-label").replace(/\s+/g, " ").trim();
     const c = (eq.querySelector(".storyeq") || eq).cloneNode(true);
     c.querySelectorAll("svg").forEach(n => n.remove());
-    c.querySelectorAll("sup").forEach(n => { n.textContent = "^" + n.textContent; });
+    c.querySelectorAll("sup").forEach(n => { n.textContent = SUP[n.textContent] || "^" + n.textContent; });
+    c.querySelectorAll(".mx > .frac").forEach(n => n.before(" "));
     c.querySelectorAll(".eqs").forEach(n => { n.textContent = " = "; });
     c.querySelectorAll(".frac").forEach(n => { const [a, b] = n.children; n.textContent = ` ${a.textContent}/${b.textContent} `; });
     return c.textContent.replace(/\s+/g, " ").trim();
@@ -1821,7 +2206,12 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   ["lastName", "firstName"].forEach(id => $(id).addEventListener("input", nameCheck));
   nameCheck();
 
-  $("gform").addEventListener("submit", () => {
+  $("gform").addEventListener("submit", (e) => {
+    if (PREVIEW) {
+      e.preventDefault();
+      $("ti-feedback").innerHTML = '<span class="note">Preview copy: nothing was sent. The class version sends to your Google Form.</span>';
+      return;
+    }
     const ln = $("lastName").value.trim(), fn = $("firstName").value.trim();
     $("studentName").value = `Period ${$("studentPeriod").value.trim()} \u2014 ${ln} \u2014 ${fn}`
       + ` \u2014 ${gradedRight()}/${GOAL} right \u2014 ${DRILL_NAME} (${records.length} tries)`;
@@ -1834,6 +2224,10 @@ dialog.guide .commute:first-child .cm-rule { display: none; }
   $("ti-back").addEventListener("click", backToPractice);
   $("turninBtn").addEventListener("click", showTurnIn);
 
+  if (PREVIEW) {
+    $("dots").insertAdjacentHTML("beforebegin", `<div class="pvbar"><b>Preview copy.</b> Problems are mixed just like the class version. Turning in sends nothing.</div>`);
+    document.title = "Preview · " + document.title;
+  }
   render();
 })();
 </script>
